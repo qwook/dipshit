@@ -188,7 +188,10 @@ function changeMap(mapname, dontappend)
         map = Map:new("assets/maps/" .. mapname)
     end
 
-    maps = {Map:new("assets/maps/test", 100, 0)}
+    maps = {}
+    local shit = Map:new("assets/maps/test", 400, 0)
+    shit:spawnObjects()
+    table.insert(maps, shit)
 
     map:spawnObjects()
 end

@@ -20,21 +20,33 @@ local function drawSingleScreen()
 
     local bg_ratio = love.graphics.getHeight()/map.background:getHeight()
 
-    local offsetx = love.graphics.getWidth()/2
-    local offsety = love.graphics.getHeight()/2
+    local offsetx = love.graphics.getWidth()/2 /2
+    local offsety = love.graphics.getHeight()/2 /2 * 1.5
 
     love.graphics.push()
-        love.graphics.scale(2, 2)
         love.graphics.setColor(255, 255, 255)
         love.graphics.draw(map.background, 0, 0, 0, bg_ratio, bg_ratio)
 
+        love.graphics.scale(2, 2)
         love.graphics.translate(math.round(-camera1_x+offsetx), math.round(-camera1_y+offsety))
 
         map:draw("player1")
 
+        for k, map in pairs(maps) do
+            map:draw("player1")
+        end
+
         player2:draw()
         player:draw()
         
+        for k, map in pairs(maps) do
+            for i, object in pairs(map.objects) do
+                object:preDraw()
+                object:draw()
+                object:postDraw()
+            end
+        end
+
         for i, object in pairs(map.objects) do
             object:preDraw()
             object:draw()

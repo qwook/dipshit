@@ -19,11 +19,16 @@ function BaseEntity:initialize()
     self.y = 0
     self.r = 0
 
-    table.insert(map.objects, self)
+    self.map = self.map or map
+
+end
+
+function BaseEntity:spawn()
+    table.insert(self.map.objects, self)
 end
 
 function BaseEntity:destroy()
-    table.removevalue(map.objects, self)
+    table.removevalue(self.map.objects, self)
 
     if self.fixture then
         self.fixture:destroy()

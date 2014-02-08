@@ -71,6 +71,13 @@ function love.update(dt)
         changeMapTimeOut = changeMapTimeOut - dt
     end
 
+    for k, map in pairs(maps) do
+        for i, object in pairs(map.objects) do
+            map = object.map or map
+            object:update(dt)
+        end
+    end
+
     for i, object in pairs(map.objects) do
         map = object.map or map
         object:update(dt)

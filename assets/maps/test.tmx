@@ -8,12 +8,12 @@
  </imagelayer>
  <layer name="SharedLayer" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt1rEJADAIRUH3yf77ZYEUQSJ8yB3YWfkaV1Wt5vBe9656zNAjix5Z9MiiR5abu5529JjR/XX1AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAf21y/Ac6
+   eJzt1jENAEAMA7HwKX9+T6BTpE5vS0GQ5SbJlAMAoLO1lL660bauPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4F8PUisFYQ==
   </data>
  </layer>
  <layer name="SharedCollision" width="100" height="100" opacity="0.38">
   <data encoding="base64" compression="zlib">
-   eJzt1rEJADAIRUHXyP6LZoEUQSJ8yB3YWfkaV1Wt5vBe9656zNAjix5Z9MiiR5abu5529JjR/XX1AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAf20TKwQ0
+   eJzt1jENAEAMA7HQKH+iT6BTpE5vS0GQ5SbJlAMAoLO1lL660bauPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4F8PynYDIQ==
   </data>
  </layer>
  <objectgroup name="Objects" width="100" height="100">

@@ -177,6 +177,11 @@ function love.keyreleased(key)
 
     input:eventKeyReleased(key)
     input2:eventKeyReleased(key)
+
+    if key == "z" then
+        maps[1]:destroy()
+        table.remove(maps, 1)
+    end
 end
 
 function love.joystickpressed( joystick, button )

@@ -31,6 +31,14 @@ function Map:initialize(mapname, offx, offy)
 end
 
 function Map:destroy()
+    local tmp = {}
+    table.copyto(self.objects, tmp)
+    for k, v in pairs(tmp) do
+        v:destroy()
+    end
+
+    table.clear(self.objects)
+
     for k, v in pairs(self.physObjects) do
         v:destroy()
         self.physObjects[k] = nil
@@ -69,8 +77,10 @@ function Map:spawnObjects()
         end
 
         -- create the object
-        local instance = c:new(v.x, v.y, v.width, v.height)
+        local instance = c:new(v.x, v.y, v.width, v.height, self)
         instance.map = self
+        instance:spawn()
+
         instance.name = v.name
         instance.brushx = v.x + self.offx
         instance.brushy = v.y + self.offy
@@ -212,7 +222,7 @@ function Map:generateTileCollision(layername, collisiongroup)
     for _, tracedShape in pairs(self.polylines) do
 
         local shape = love.physics.newChainShape(false, unpack(tracedShape))
-        local body = love.physics.newBody(world, 0, 0, 'static')
+        local body = love.physics.newBody(world, self.offx, self.offy, 'static')
         local fixture = love.physics.newFixture(body, shape)
         fixture:setUserData(hack)
         fixture:setFriction(0.5)
@@ -224,77 +234,77 @@ function Map:generateTileCollision(layername, collisiongroup)
         
     end
 
-    for y, row in pairs(collision) do
-        for x, tile in pairs(row) do
-            if (tile == 1) then
-                if self.tiledmap.layers[layername].data[y][x].properties then
-                    local data = self.tiledmap.layers[layername].data[y][x]
-                    local colshape = data.properties.colshape
+    -- for y, row in pairs(collision) do
+    --     for x, tile in pairs(row) do
+    --         if (tile == 1) then
+    --             if self.tiledmap.layers[layername].data[y][x].properties then
+    --                 local data = self.tiledmap.layers[layername].data[y][x]
+    --                 local colshape = data.properties.colshape
 
-                    -- this is the worst thing i've ever written in my entire life
+    --                 -- this is the worst thing i've ever written in my entire life
 
-                    local ang = -1
+    --                 local ang = -1
 
-                    if (colshape == "2") then
-                        ang = 0
-                    elseif (colshape == "4") then
-                        ang = 1
-                    elseif (colshape == "3") then
-                        ang = 2
-                    elseif (colshape == "5") then
-                        ang = 3
-                    end
+    --                 if (colshape == "2") then
+    --                     ang = 0
+    --                 elseif (colshape == "4") then
+    --                     ang = 1
+    --                 elseif (colshape == "3") then
+    --                     ang = 2
+    --                 elseif (colshape == "5") then
+    --                     ang = 3
+    --                 end
 
-                    if data.r == math.rad(-90) then
-                        ang = 2*ang - 1
-                    elseif data.r == math.rad(90) then
-                        ang = ang + 1
-                    end
+    --                 if data.r == math.rad(-90) then
+    --                     ang = 2*ang - 1
+    --                 elseif data.r == math.rad(90) then
+    --                     ang = ang + 1
+    --                 end
 
-                    ang = ang % 4
+    --                 ang = ang % 4
 
-                    if data.sx == -1 then
-                        if ang == 0 then
-                            ang = 1
-                        elseif ang == 1 then
-                            ang = 0
-                        elseif ang == 2 then
-                            ang = 3
-                        elseif ang == 3 then
-                            ang = 2
-                        end
-                    end
+    --                 if data.sx == -1 then
+    --                     if ang == 0 then
+    --                         ang = 1
+    --                     elseif ang == 1 then
+    --                         ang = 0
+    --                     elseif ang == 2 then
+    --                         ang = 3
+    --                     elseif ang == 3 then
+    --                         ang = 2
+    --                     end
+    --                 end
 
-                    if data.sy == -1 then
-                        if ang == 0 then
-                            ang = 3
-                        elseif ang == 3 then
-                            ang = 0
-                        elseif ang == 1 then
-                            ang = 2
-                        elseif ang == 2 then
-                            ang = 1
-                        end
-                    end
+    --                 if data.sy == -1 then
+    --                     if ang == 0 then
+    --                         ang = 3
+    --                     elseif ang == 3 then
+    --                         ang = 0
+    --                     elseif ang == 1 then
+    --                         ang = 2
+    --                     elseif ang == 2 then
+    --                         ang = 1
+    --                     end
+    --                 end
 
-                    if (colshape ~= "1") then
-                        if (ang == -1) then
-                            -- this is handled by the optimizer, just kept in incase STI is stupid
-                            -- self:set(x, y, Tile:new(self.tiledmap.tilewidth, self.tiledmap.tileheight))
-                        elseif (ang == 0) then
-                            table.insert(self.physObjects, Tile2:new(self.tiledmap.tilewidth, self.tiledmap.tileheight, collisiongroup))
-                        elseif (ang == 2) then
-                            table.insert(self.physObjects, Tile3:new(self.tiledmap.tilewidth, self.tiledmap.tileheight, collisiongroup))
-                        elseif (ang == 1) then
-                            table.insert(self.physObjects, Tile4:new(self.tiledmap.tilewidth, self.tiledmap.tileheight, collisiongroup))
-                        elseif (ang == 3) then
-                            table.insert(self.physObjects, Tile5:new(self.tiledmap.tilewidth, self.tiledmap.tileheight, collisiongroup))
-                        end
-                    end
-                end
-            end
-        end
-    end
+    --                 if (colshape ~= "1") then
+    --                     if (ang == -1) then
+    --                         -- this is handled by the optimizer, just kept in incase STI is stupid
+    --                         -- self:set(x, y, Tile:new(self.tiledmap.tilewidth, self.tiledmap.tileheight))
+    --                     elseif (ang == 0) then
+    --                         table.insert(self.physObjects, Tile2:new(self.tiledmap.tilewidth, self.tiledmap.tileheight, collisiongroup))
+    --                     elseif (ang == 2) then
+    --                         table.insert(self.physObjects, Tile3:new(self.tiledmap.tilewidth, self.tiledmap.tileheight, collisiongroup))
+    --                     elseif (ang == 1) then
+    --                         table.insert(self.physObjects, Tile4:new(self.tiledmap.tilewidth, self.tiledmap.tileheight, collisiongroup))
+    --                     elseif (ang == 3) then
+    --                         table.insert(self.physObjects, Tile5:new(self.tiledmap.tilewidth, self.tiledmap.tileheight, collisiongroup))
+    --                     end
+    --                 end
+    --             end
+    --         end
+    --     end
+    -- end
 end
 
 return Map

@@ -166,7 +166,8 @@ function Player:update(dt)
         local bullet = Bullet:new()
         bullet:setPosition(self:getPosition())
         bullet:initPhysics()
-        bullet:setVelocity(1000*math.cos(self.aimangle), 1000*math.sin(self.aimangle))
+        bullet:setVelocity(750*math.cos(self.aimangle), 750*math.sin(self.aimangle))
+        bullet:spawn()
     end
 
 
@@ -230,13 +231,14 @@ function Player:update(dt)
             end
         end
         if self.controller:isKeyDown("jump") and self.nextJump <= 0 then
-            self.nextJump = 0.1
+            self.nextJump = 0.2
             self.shortJump = 0.075
 
             self.body:applyLinearImpulse(-velx*0.05, -40)
             playSound("bwop.wav")
             local smoke = Particle:new()
             smoke:setPosition(self:getPosition())
+            smoke:spawn()
         end
     else -- henry: okay so this code is basically the same as when we're on the floot
         -- with the exception that we can jump
@@ -364,6 +366,7 @@ function Player:beginContact(other, contact, isother)
 
         -- local smoke = DebugArrow:new()
         local smoke = GhostPlayer:new()
+        smoke:spawn()
         smoke:setPosition(x, y)
 
         local ang = math.atan2(normy, normx)
@@ -436,6 +439,7 @@ end
 function Player:postSolve(other, contact, nx, ny, isother)
     if self.moving and self.nextDust <= 0 and self:getFloor() ~= false then
         local smoke = WalkingDust:new()
+        smoke:spawn()
         local x, y = self:getPosition()
         local vx, vy = 0, -50
 
