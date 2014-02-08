@@ -7,13 +7,13 @@ BaseEntity = require("entities.core.baseentity")
 Weld = class("Weld", BaseEntity)
 
 function Weld:postSpawn()
-    local objs1 = map:findObjectsByName(self:getProperty("object1"))
+    local objs1 = self.map:findObjectsByName(self:getProperty("object1"))
     local obj1 = objs1[1]
 
     if not obj1 then return end
     if not obj1.body then return end
 
-    local objs2 = map:findObjectsByName(self:getProperty("object2"))
+    local objs2 = self.map:findObjectsByName(self:getProperty("object2"))
     local obj2 = objs2[1]
 
     if not obj2 then return end

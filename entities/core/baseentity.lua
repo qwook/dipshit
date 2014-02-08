@@ -283,6 +283,10 @@ function BaseEntity:getVelocity()
     return self.body:getLinearVelocity()
 end
 
+function BaseEntity:applyForce(x, y)
+    self.body:applyForce(x, y)
+end
+
 function BaseEntity:setFriction(frict)
     if not self.fixture then return end
     self.fixture:setFriction(frict)

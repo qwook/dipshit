@@ -24,6 +24,7 @@ TitleScreen =   require("entities.core.titlescreen")
 Text =          require("entities.text")
 Timer =         require("entities.timer")
 MisterF =       require("entities.misterf")
+Goomba =        require("entities.core.goomba")
 
 PhysBox =       require("entities.physbox")
 Button =        require("entities.button")
@@ -33,7 +34,7 @@ Prop =          require("entities.prop")
 LayerObject =   require("entities.layerobject")
 Trampoline =    require("entities.trampoline")
 Slider =        require("entities.slider")
-Weld =        require("entities.weld")
+Weld =          require("entities.weld")
 
 Bull =          require("entities.npc.bull")
 BlueBall =      require("entities.npc.blueball")
@@ -127,7 +128,7 @@ function contactFilter(fixture1, fixture2)
     end
 
     if physical1.type == "PLAYER" and physical2.type == "PLAYER" then
-        return true
+        return false
     end
 
     if physical1.collisiongroup == "shared" or physical2.collisiongroup == "shared" then
@@ -155,10 +156,20 @@ function contactFilter(fixture1, fixture2)
     return true
 end
 
-function changeMap(mapname)
+function changeMap(mapname, dontappend)
 
     if world then
         world:destroy()
+    end
+
+    if player then
+        player:destroy()
+        player = nil
+    end
+
+    if player2 then
+        player2:destroy()
+        player2 = nil
     end
 
     world = love.physics.newWorld()
@@ -171,37 +182,27 @@ function changeMap(mapname)
 
     clearUpdates()
 
-    map = Map:new("assets/maps/" .. mapname)
+    if dontappend then
+        map = Map:new(mapname)
+    else
+        map = Map:new("assets/maps/" .. mapname)
+    end
+
+    maps = {Map:new("assets/maps/test", 100, 0)}
 
     map:spawnObjects()
 end
 
 function reset()
-
-    if world then
-        world:destroy()
-    end
-
-    world = love.physics.newWorld()
-    world:setCallbacks(beginContact, endContact, preSolve, postSolve)
-    world:setContactFilter(contactFilter)
-    world:setGravity(0, 1000)
-
     if arg[2] then 
-        map = Map:new(arg[2])
+        changeMap(arg[2])
     else
         if not map then
-            map = Map:new("assets/maps/title")
+            changeMap("title")
         else
-            map = Map:new(map.mapname)
+            changeMap(map.mapname, true)
         end
     end
-    
-    collisionSwapped = false
-    singleCamera = false
-
-    clearUpdates()
-    map:spawnObjects()
 end
 
 function love.load()
@@ -210,6 +211,7 @@ function love.load()
 
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.graphics.setBackgroundColor(134, 200, 255)
+    love.physics.setMeter(60)
 
     input = Input:new()
     input2 = Input:new()

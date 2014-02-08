@@ -40,6 +40,7 @@ function Player:initialize()
     self.nextJump = 0
 
     self.facing = 'right'
+    self.aimangle = 0
     self.moving = false
     self.crouching = false
     self.lastFVX = 0
@@ -81,9 +82,7 @@ function Player:event_teleportto(name)
 
     for k,v in pairs(map.objects) do
         if v.name == name then
-            -- print(v:getPosition())
             self:setPosition(v:getPosition())
-            -- self:setPosition(self:getPosition())
             return
         end
     end
@@ -107,8 +106,14 @@ function Player:initPhysics()
     self.fixture:setUserData(self)
     self.fixture:setFriction(PLAYER_FRICTION)
     self.body:setLinearDamping(0)
-    self.body:setMass(20)
+    self.body:setMass(1)
     self.body:setFixedRotation(true)
+end
+
+function Player:destroy()
+    for k,v in pairs(self) do
+        self[k] = nil
+    end
 end
 
 function Player:getFloor()
@@ -137,8 +142,22 @@ function Player:update(dt)
 
     if self.controller:wasKeyPressed("left") then
         self.facing = 'left'
+        self.aimangle = math.pi
     elseif self.controller:wasKeyPressed("right")  then
         self.facing = 'right'
+        self.aimangle = 0
+    end
+
+    if self.controller:isKeyDown("lookup") then
+        self.aimangle = math.lerpAngle(self.aimangle, -math.pi/2, 5*dt)
+    elseif self.controller:isKeyDown("lookdown") then
+        self.aimangle = math.lerpAngle(self.aimangle, math.pi/2, 5*dt)
+    else
+        if self.facing == 'left' then
+            self.aimangle = math.lerpAngle(self.aimangle, math.pi, 5*dt)
+        else
+            self.aimangle = math.lerpAngle(self.aimangle, 0, 5*dt)
+        end
     end
 
 
@@ -147,12 +166,7 @@ function Player:update(dt)
         local bullet = Bullet:new()
         bullet:setPosition(self:getPosition())
         bullet:initPhysics()
-
-        if self.facing == 'left' then
-            bullet:setVelocity(-1000, 0)
-        else
-            bullet:setVelocity(1000, 0)
-        end
+        bullet:setVelocity(1000*math.cos(self.aimangle), 1000*math.sin(self.aimangle))
     end
 
 
@@ -165,10 +179,6 @@ function Player:update(dt)
     if self.nextDust > 0 then
         self.nextDust = self.nextDust - dt
     end
-
-    self.expression = 0
-    if (self.controller:isKeyDown(":|")) then self.expression = self.expression + 1 end
-    if (self.controller:isKeyDown(":/")) then self.expression = self.expression + 2 end
 
     -- handle physics --
 
@@ -211,19 +221,19 @@ function Player:update(dt)
         end
 
         if self.controller:isKeyDown("right") then
-            if velx < 250 then
-                self.body:applyForce(1000, 0)
+            if velx < 200 then
+                self.body:applyForce(500, 0)
             end
         elseif self.controller:isKeyDown("left") then
-            if velx > -250 then
-                self.body:applyForce(-1000, 0)
+            if velx > -200 then
+                self.body:applyForce(-500, 0)
             end
         end
         if self.controller:isKeyDown("jump") and self.nextJump <= 0 then
             self.nextJump = 0.1
             self.shortJump = 0.075
 
-            self.body:applyLinearImpulse(-velx*0.25, -125-vely)
+            self.body:applyLinearImpulse(-velx*0.05, -40)
             playSound("bwop.wav")
             local smoke = Particle:new()
             smoke:setPosition(self:getPosition())
@@ -248,7 +258,7 @@ function Player:update(dt)
 
         -- we just jumped, allow for a longer jump
         if self.shortJump > 0 and self.controller:isKeyDown("jump") then
-            self.body:applyForce(0, -3500)
+            self.body:applyForce(0, -600)
             self.shortJump = self.shortJump - dt
         else
             -- OCD.. constantly make sure we can't short jump

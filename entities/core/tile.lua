@@ -13,6 +13,12 @@ function Tile:initialize(w, h, collisiongroup)
     self:initPhysics()
 end
 
+function Tile:destroy()
+    self.body:destroy()
+    self.shape:destroy()
+    self.fixture:destroy()
+end
+
 function Tile:initPhysics()
     self.body = love.physics.newBody(world, 0, 0, 'static')
     self.shape = love.physics.newRectangleShape(self.width, self.height)

@@ -7,7 +7,7 @@ BaseEntity = require("entities.core.baseentity")
 Slider = class("Slider", BaseEntity)
 
 function Slider:postSpawn()
-    local objs = map:findObjectsByName(self:getProperty("object"))
+    local objs = self.map:findObjectsByName(self:getProperty("object"))
     local obj = objs[1]
 
     if not obj then return end

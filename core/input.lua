@@ -18,8 +18,8 @@ IN_KEYS = {
     ["left"]   = bit.lshift(1, 3);
     ["right"]  = bit.lshift(1, 4);
     ["crouch"] = bit.lshift(1, 5);
-    [":|"]     = bit.lshift(1, 6);
-    [":/"]     = bit.lshift(1, 7);
+    ["lookup"]     = bit.lshift(1, 6);
+    ["lookdown"]     = bit.lshift(1, 7);
     ["select"] = bit.lshift(1, 8);
     ["start"]  = bit.lshift(1, 9);
 }

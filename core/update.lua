@@ -72,6 +72,7 @@ function love.update(dt)
     end
 
     for i, object in pairs(map.objects) do
+        map = object.map or map
         object:update(dt)
     end
 
