@@ -21,6 +21,8 @@ function Goomba:initialize()
     self.shootFacingPlayer = false -- shoot only facing player
     self.canAim = true -- can it aim at the player?
     self.stopBeforeShooting = false -- stop before shooting?
+    self.bulletOffsetX = 0
+    self.bulletOffsetY = 0
 
     -- dependent variables
     self.nextAttack = 0
@@ -30,19 +32,26 @@ function Goomba:initialize()
     self.nextReload = self.reloadDelay
     self.clip = self.clipsize
     self.lastDamaged = 0
+    self.ang = 1
 end
 
 function Goomba:postSpawn()
-    self.nextAttack = tonumber(self:getProperty("initialdelay") or 0.05)
-    self.attackDelay = tonumber(self:getProperty("attackdelay") or 0.05)
-    self.reloadDelay = tonumber(self:getProperty("reloaddelay") or 0.5)
-    self.clipsize = tonumber(self:getProperty("clipsize") or 5)
-    self.cone = tonumber(self:getProperty("cone") or 60) -- in radians
-    self.health = tonumber(self:getProperty("health") or 20) -- health
-    self.range = tonumber(self:getProperty("range") or 250) -- range of attack
-    self.shootFacingPlayer = self:getProperty("shootfaceingplayer") == "true" -- shoot only facing player
-    self.canAim = self:getProperty("canaim") == "true" -- shoot only facing player
-    self.stopBeforeShooting = self:getProperty("stopbeforeshooting") == "true" -- shoot only facing player
+    self.nextAttack = tonumber(self:getProperty("initialdelay") or self.nextAttack)
+    self.attackDelay = tonumber(self:getProperty("attackdelay") or self.attackDelay)
+    self.reloadDelay = tonumber(self:getProperty("reloaddelay") or self.reloadDelay)
+    self.clipsize = tonumber(self:getProperty("clipsize") or self.clipsize)
+    self.cone = tonumber(self:getProperty("cone") or self.cone) -- in radians
+    self.health = tonumber(self:getProperty("health") or self.health) -- health
+    self.range = tonumber(self:getProperty("range") or self.range) -- range of attack
+    if self:getProperty("shootfaceingplayer") then
+        self.shootFacingPlayer = self:getProperty("shootfaceingplayer") == "true" -- shoot only facing player
+    end
+    if self:getProperty("canaim") then
+        self.canAim = self:getProperty("canaim") == "true" -- shoot only facing player
+    end
+    if self:getProperty("stopbeforeshooting") then
+        self.stopBeforeShooting = self:getProperty("stopbeforeshooting") == "true" -- shoot only facing player
+    end
 end
 
 function Goomba:inflictDamage(dmg)
@@ -115,6 +124,8 @@ end
 
 function Goomba:update(dt)
 
+    local x, y = self:getPosition()
+
     -- this is for the flashing effect
     if self.lastDamaged >= 0 then
         self.lastDamaged = self.lastDamaged - dt
@@ -133,16 +144,15 @@ function Goomba:update(dt)
             local aimangle
             local goal = self:getGoal()
             if self.canAim and goal then
-                local x, y = self:getPosition()
                 local gx, gy = goal:getPosition()
-                local ang = math.atan2(gy - y, gx - x)
+                local ang = math.atan2(gy - y, gx - x) or -1
                 aimangle = ang + math.random(-self.cone, self.cone)/180
             else
                 aimangle = (math.pi/2 - self.ang * (math.pi/2)) + math.random(-self.cone, self.cone)/180
             end
 
             local bullet = NPCBullet:new()
-            bullet:setPosition(self:getPosition())
+            bullet:setPosition(x + self.bulletOffsetX*self.ang, y + self.bulletOffsetY)
             bullet:initPhysics()
             bullet:setVelocity(250*math.cos(aimangle), 250*math.sin(aimangle))
             bullet:spawn()

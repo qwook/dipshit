@@ -360,13 +360,7 @@ return {
           height = 0,
           gid = 1,
           visible = true,
-          properties = {
-            ["attackdelay"] = "0",
-            ["cainaim"] = "false",
-            ["clipsize"] = "3",
-            ["cone"] = "40",
-            ["reloaddelay"] = "1"
-          }
+          properties = {}
         },
         {
           name = "start",
