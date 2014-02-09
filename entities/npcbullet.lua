@@ -8,7 +8,7 @@ function NPCBullet:initialize()
     BaseEntity.initialize(self)
     self.type = "BULLET"
     self.nextDie = 5
-    --playSound("smash.wav")  fuck yo sound 
+    playSound("smash.wav") -- fuck yo sound 
 end
 
 function NPCBullet:shouldCollide(other)
@@ -41,9 +41,11 @@ end
 function NPCBullet:beginContact(other, contact, isother)
     if other.isSensor and other:isSensor() then return end
 
-    if other.inflictDamage then
-        other:inflictDamage(10)
-    end
+    onNextUpdate(function()
+        if other.inflictDamage then
+            other:inflictDamage(5)
+        end
+    end)
 
     self:destroy()
 end

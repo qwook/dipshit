@@ -49,14 +49,85 @@ function Player:initialize()
 
     self.lastDamaged = 0
 
+    -- score and life and shit
+    self.life = 0
+    self.health = 100
+    self.score = 0
+
+    -- am i dead
+    self.dead = false
+    self.nextRespawn = 0
+    self.invuln = 0 -- invulnerable
+
     self:initPhysics()
+
+end
+
+function Player:shouldCollide()
+    if self.dead then
+        return false
+    end
+end
+
+function Player:isAlive()
+    return not self.dead
+end
+
+function Player:getRespawnTime()
+    return math.floor(self.nextRespawn*10)/10
 end
 
 function Player:inflictDamage(dmg)
+    if self.invuln >= 0 then return end
+
     self.lastDamaged = 0.05
-    -- self.health = self.health - dmg
-    -- if self.health < 0 then
-    -- end
+    self.health = self.health - dmg
+    if self.health < 0 then
+        self:kill()
+    end
+end
+
+function Player:respawn()
+    local cx, cy = getCameraPosition()
+
+    local spawnx, spawny = 0, 0
+    local shortestDist = nil
+
+    for k, map in pairs(maps) do
+        for i, object in pairs(map.objects) do
+            if (object.name == "player1" and self.name == "Stewart") or
+                (object.name == "player2" and self.name == "Cindy" ) then
+                local ox, oy = object:getPosition()
+                local dist = math.distance(cx, cy, ox, oy)
+                if shortestDist == nil or dist < shortestDist then
+                    shortestDist = dist
+                    spawnx = ox
+                    spawny = oy
+                end
+            end
+        end
+    end
+
+    print(ox, oy)
+
+    self.health = 100
+    self.dead = false
+    self.invuln = 1
+    self.body:setGravityScale(1)
+    self:forceCollisionRecalculation()
+    self:setPosition(spawnx, spawny)
+end
+
+function Player:kill()
+    self.dead = true
+    self.body:setGravityScale(0)
+    self.body:setLinearVelocity(0, 0)
+    self.body:setAngularVelocity(0, 0)
+
+    player:forceCollisionRecalculation()
+    player2:forceCollisionRecalculation()
+
+    self.nextRespawn = 10
 end
 
 function Player:event_multiplyvelocity(x, y)
@@ -154,6 +225,17 @@ function Player:delayJump(time)
 end
 
 function Player:update(dt)
+
+    if self.dead then
+        self.nextRespawn = self.nextRespawn - dt
+        if self.nextRespawn <= 0 then
+            self:respawn()
+        end
+        return
+    end
+
+    -- handle invulnerability
+    self.invuln = self.invuln - dt
 
     local looking = self.controller:isKeyDown("lookup") or self.controller:isKeyDown("lookdown")
 
@@ -323,6 +405,9 @@ function Player:update(dt)
 end
 
 function Player:draw()
+
+    if self.dead then return end
+
     local x, y = self:getPosition()
     local r = self:getAngle()
 
@@ -342,18 +427,22 @@ function Player:draw()
     self:drawPlayer()
 
 
-    -- draw damage flash
-    if self.lastDamaged >= 0 then
-        love.graphics.setStencil(function ()
-            love.graphics.setShader(shaders.mask_effect)
-            self:drawPlayer()
-            love.graphics.setShader()
-        end)
-        love.graphics.setColor(255, 0, 0, 150)
+    -- draw damage flash and invuln flash
+    love.graphics.setStencil(function ()
+        love.graphics.setShader(shaders.mask_effect)
+        self:drawPlayer()
+        love.graphics.setShader()
+    end)
+    if self.invuln > 0 and (math.floor(love.timer.getTime() * 10) % 2) == 0 then
+        love.graphics.setColor(255, 255, 255, 100)
         -- guesstimate rectangle
         love.graphics.rectangle("fill", -100, -100, 200, 200)
-        love.graphics.setStencil()
+    elseif self.lastDamaged >= 0 then 
+        love.graphics.setColor(255, 0, 0, 240)
+        -- guesstimate rectangle
+        love.graphics.rectangle("fill", -100, -100, 200, 200)
     end
+    love.graphics.setStencil()
 
 
     love.graphics.pop()
@@ -534,11 +623,48 @@ end
 
 -- scoring and lives and shit
 function Player:deductLife()
+    self.life = self.life - 1
 end
 
 function Player:addLife()
+    self.life = self.life + 1
 end
 
+function Player:resetLife()
+    self.life = 3
+end
+
+function Player:getLife()
+    return self.life
+end
+
+function Player:deductHealth(dmg)
+    self.health = self.health - dmg
+end
+
+function Player:addHealth(hlth)
+    self.health = self.health + hlth
+end
+
+function Player:resetHealth()
+    self.health = 100
+end
+
+function Player:getHealth()
+    return self.health
+end
+
+function Player:addScore(sc)
+    self.score = self.score + sc
+end
+
+function Player:resetScore()
+    self.score = 0
+end
+
+function Player:getScore()
+    return self.score
+end
 
 -- Cindy is player 2.
 Cindy = class("Cindy", Player)

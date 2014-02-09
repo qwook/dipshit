@@ -41,19 +41,21 @@ end
 function Bullet:beginContact(other, contact, isother)
     if other.isSensor and other:isSensor() then return end
 
-    if other.inflictDamage then
+    local nx, ny = contact:getNormal()
+    local x, y = contact:getPositions()
 
-        local nx, ny = contact:getNormal()
-        local x, y = contact:getPositions()
+    onNextUpdate(function()
+        if other.inflictDamage then
 
-        local blood = Blood:new()
-        blood:setPosition(x - nx*5, y - ny*5)
-        blood:setAngle(math.atan2(ny, nx))
-        blood:spawn()
+            local blood = Blood:new()
+            blood:setPosition(x - nx*5, y - ny*5)
+            blood:setAngle(math.atan2(ny, nx))
+            blood:spawn()
 
-        other:inflictDamage(10)
-    end
-
+            other:inflictDamage(10)
+        end
+    end)
+    
     self:destroy()
 end
 

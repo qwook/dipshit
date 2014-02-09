@@ -10,16 +10,36 @@ local CAM_MAX_VERTICAL = 100
 
 cameraLife = 0
 
+function getCameraPosition()
+    return camera1_x, camera1_y
+end
+
 local function drawSingleScreen()
 
     local p1x, p1y = player:getPosition()
     local p2x, p2y = player2:getPosition()
 
-    camera1_x = (p1x + p2x) / 2
-    camera1_y = (p1y + p2y) / 2
+    local cx, cy = camera1_x, camera1_y
+    if player:isAlive() and player2:isAlive() then
+        cx = (p1x + p2x) / 2
+        cy = (p1y + p2y) / 2
+    else
+        if player:isAlive() then
+            cx = p1x
+            cy = p1y
+        elseif player2:isAlive() then
+            cx = p2x
+            cy = p2y
+        end
+    end
 
-    camera2_x = (p1x + p2x) / 2
-    camera2_y = (p1y + p2y) / 2
+    cx, cy = math.lerp(camera1_x, camera1_y, cx, cy, 0.1)
+
+    camera1_x = cx
+    camera1_y = cy
+    camera2_x = cx
+    camera2_y = cy
+
 
     local bg_ratio = love.graphics.getHeight()/map.background:getHeight()
 
@@ -198,7 +218,7 @@ end
 
 function drawFontKerned(string, x, y, xoff)
     -- go through every character and print it
-    string:gsub(".", function(a)
+    tostring(string):gsub(".", function(a)
         love.graphics.print(a, x, y)
         x = x + love.graphics.getFont():getWidth(a) + xoff
     end)
@@ -206,14 +226,13 @@ end
 
 function love.draw()
 
-
     local p1x, p1y = player:getPosition()
     local p2x, p2y = player2:getPosition()
 
-    if math.distance(p1x, p1y, p2x, p2y) < 500 then
-        drawSingleScreen()
-    else
+    if math.distance(p1x, p1y, p2x, p2y) > 500 and player:isAlive() and player2:isAlive() then
         drawSplitScreen()
+    else
+        drawSingleScreen()
     end
 
     if changeMapTime > 0 then
@@ -237,6 +256,24 @@ function love.draw()
 
     love.graphics.setColor(255, 255, 255)
     love.graphics.setFont(boldFont)
-    drawFontKerned("0123456789", 0, 0, -8)
+
+    -- player 1 stats
+    drawFontKerned("score 0000000", 0, 0, -8)
+    drawFontKerned(":) :) :)", 5, 30, -8)
+    if player:isAlive() then
+        drawFontKerned(string.rep("|", math.floor(player:getHealth()/5)), 0, 60, -8)
+    else
+        drawFontKerned(player:getRespawnTime(), 0, 60, -8)
+    end
+
+    -- player 2 stats
+    drawFontKerned("score 0000000", love.graphics.getWidth() - 250, 0, -8)
+    drawFontKerned(":) :) :)", love.graphics.getWidth() - 250 + 5, 30, -8)
+    if player2:isAlive() then
+        drawFontKerned(string.rep("|", math.floor(player2:getHealth()/5)), love.graphics.getWidth() - 250, 60, -8)
+    else
+        drawFontKerned(player2:getRespawnTime(), love.graphics.getWidth() - 250, 60, -8)
+    end
+
 
 end

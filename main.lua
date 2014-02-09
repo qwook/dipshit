@@ -202,9 +202,8 @@ function changeMap(mapname, dontappend)
 
     maps = {}
 
-    for i = 1, 5 do
-        extendMap()
-    end
+    extendMap()
+    extendMap()
 end
 
 function extendMap()
