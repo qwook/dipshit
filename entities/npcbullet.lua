@@ -50,8 +50,10 @@ function NPCBullet:beginContact(other, contact, isother)
             blood:setPosition(x - nx*5, y - ny*5)
             blood:setAngle(math.atan2(ny, nx))
             blood:spawn()
-
+            
             other:inflictDamage(5)
+
+            
         end
     end)
 

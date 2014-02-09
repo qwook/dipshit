@@ -305,7 +305,7 @@ function love.draw()
     love.graphics.setFont(boldFont)
 
     -- player 1 stats
-    drawFontKerned("score 0000000", 0, 0, -8)
+    drawFontKerned("score "..player:getScore(), 0, 0, -8)
     drawFontKerned(":) :) :)", 5, 30, -8)
     if player:isAlive() then
         drawFontKerned(string.rep("|", math.floor(player:getHealth()/5)), 0, 60, -8)
@@ -314,7 +314,7 @@ function love.draw()
     end
 
     -- player 2 stats
-    drawFontKerned("score 0000000", love.graphics.getWidth() - 250, 0, -8)
+    drawFontKerned("score "..player2:getScore(), love.graphics.getWidth() - 250, 0, -8)
     drawFontKerned(":) :) :)", love.graphics.getWidth() - 250 + 5, 30, -8)
     if player2:isAlive() then
         drawFontKerned(string.rep("|", math.floor(player2:getHealth()/5)), love.graphics.getWidth() - 250, 60, -8)

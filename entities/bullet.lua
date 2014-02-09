@@ -53,6 +53,9 @@ function Bullet:beginContact(other, contact, isother)
             blood:spawn()
 
             other:inflictDamage(10)
+     
+                player2:addScore(5)
+            
         end
     end)
     
