@@ -1,5 +1,6 @@
 
 BaseEntity = require("entities.core.baseentity")
+Blood = require("entities.particles.blood")
 
 Bullet = class("Bullet", BaseEntity)
 Bullet.image = loadImage("sprites/bullet.gif")
@@ -41,6 +42,15 @@ function Bullet:beginContact(other, contact, isother)
     if other.isSensor and other:isSensor() then return end
 
     if other.inflictDamage then
+
+        local nx, ny = contact:getNormal()
+        local x, y = contact:getPositions()
+
+        local blood = Blood:new()
+        blood:setPosition(x - nx*5, y - ny*5)
+        blood:setAngle(math.atan2(ny, nx))
+        blood:spawn()
+
         other:inflictDamage(10)
     end
 

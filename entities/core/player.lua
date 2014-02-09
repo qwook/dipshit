@@ -375,7 +375,7 @@ function Player:drawPlayer()
     if self.moving then
         self.spritesheet:draw(anim, 0, -13, -19)
     else
-        self.spritesheet:draw(9, 2, -13, -19)
+        self.spritesheet:draw(8, 0, -13, -19)
     end
 
     if self.facing == "right" then
@@ -388,7 +388,7 @@ function Player:drawPlayer()
         love.graphics.translate(0, 1)
     end
 
-    self.spritesheet:draw(10, 2, -13, -19)
+    self.spritesheet:draw(0, 4, -13, -19)
 
     love.graphics.pop()
 end
@@ -533,6 +533,13 @@ function Player:postSolve(other, contact, nx, ny, isother)
     end
 end
 
+-- scoring and lives and shit
+function Player:deductLife()
+end
+
+function Player:addLife()
+end
+
 
 -- Cindy is player 2.
 Cindy = class("Cindy", Player)
@@ -545,7 +552,7 @@ function Cindy:initialize()
 end
 
 function Cindy:drawPlayer()
-    local anim = 8
+    local anim = 9
     if self.moving then
         anim = math.floor(love.timer.getTime()*20) % 8
     end
@@ -553,7 +560,23 @@ function Cindy:drawPlayer()
     love.graphics.push()
     love.graphics.scale(2)
 
-    self.spritesheet:draw(anim, 1, -13, -20)
+    if self.moving then
+        self.spritesheet:draw(anim, 2, -13, -19)
+    else
+        self.spritesheet:draw(8, 2, -13, -19)
+    end
+
+    if self.facing == "right" then
+        love.graphics.rotate(self.aimangle)
+    else
+        love.graphics.rotate(math.pi-self.aimangle)
+    end
+
+    if anim > 0 and anim <= 3 then
+        love.graphics.translate(0, 1)
+    end
+
+    self.spritesheet:draw(0, 4, -13, -19)
 
     love.graphics.pop()
 end

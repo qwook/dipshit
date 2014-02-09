@@ -2,6 +2,7 @@
 Particle = require("entities.core.particle")
 
 WalkingDust = class("Particle", Particle)
+WalkingDust.spritesheet = SpriteSheet:new("sprites/dust2.png", 32, 32)
 
 function WalkingDust:initialize()
     Particle.initialize(self)
@@ -10,7 +11,6 @@ function WalkingDust:initialize()
     self.velx = 0
     self.vely = 0
     self.lifetime = 0.5
-    self.spritesheet = SpriteSheet:new("sprites/dust2.png", 32, 32)
 end
 
 function WalkingDust:setVelocity(velx, vely)

@@ -196,6 +196,14 @@ local function drawSplitScreen()
 
 end
 
+function drawFontKerned(string, x, y, xoff)
+    -- go through every character and print it
+    string:gsub(".", function(a)
+        love.graphics.print(a, x, y)
+        x = x + love.graphics.getFont():getWidth(a) + xoff
+    end)
+end
+
 function love.draw()
 
 
@@ -226,5 +234,9 @@ function love.draw()
         love.graphics.setColor(255, 255, 255)
         love.graphics.printf("Continue?\n" .. timer, 0, love.graphics.getHeight()/2-50, love.graphics.getWidth()/4, "center", 0, 4, 4)
     end
+
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.setFont(boldFont)
+    drawFontKerned("0123456789", 0, 0, -8)
 
 end

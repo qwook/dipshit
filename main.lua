@@ -265,6 +265,9 @@ function love.load()
     love.graphics.setBackgroundColor(134, 200, 255)
     love.physics.setMeter(60)
 
+    -- I'M A TERRIBLE PROGRAMMER! WHY MEE!!!
+    boldFont = love.graphics.newFont("assets/fonts/slkscre.ttf", 32)
+
     splitFramebuffer = love.graphics.newCanvas()
 
     input = Input:new()
