@@ -209,7 +209,6 @@ function Player:update(dt)
         bullet:initPhysics()
         bullet:setVelocity(750*math.cos(self.aimangle), 750*math.sin(self.aimangle))
         bullet:spawn()
-
         if self.facing == "right" then
             self.aimangle = self.aimangle - 0.5
         else
