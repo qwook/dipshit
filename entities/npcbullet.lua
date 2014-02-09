@@ -8,6 +8,7 @@ function NPCBullet:initialize()
     BaseEntity.initialize(self)
     self.type = "BULLET"
     self.nextDie = 5
+    playSound("plop.wav")
 end
 
 function NPCBullet:shouldCollide(other)
