@@ -1,3 +1,6 @@
+
+require("core.cache")
+
 local Feathering = 4.0
 local Attraction = 4.0
 local Break = 2.0
@@ -12,6 +15,48 @@ cameraLife = 0
 
 function getCameraPosition()
     return camera1_x, camera1_y
+end
+
+local bg_gradient = loadImage("sprites/fk_0.gif")
+local bg_poop = loadImage("sprites/fk_1.gif")
+local bg_buildings = loadImage("sprites/fk_2.gif")
+local bg_trees = loadImage("sprites/fk_3.gif")
+function drawBackground(w, h, offw, offh)
+
+    love.graphics.push()
+    love.graphics.scale(4, 4)
+
+    local img_w = bg_gradient:getWidth()
+    local img_h = bg_gradient:getHeight()
+
+    local max_w = math.floor(w/(img_w*4))*2
+
+    love.graphics.setColor(0, 255, 255)
+    love.graphics.rectangle('fill', 0, 0, w/4, h/8)
+
+    love.graphics.setColor(255, 0, 215)
+    love.graphics.rectangle('fill', 0, h/8, w/4, h/8)
+
+    love.graphics.setColor(255, 255, 255)
+
+    for x = 0, max_w do
+        love.graphics.setColor(124 + (getSample() or 0)*124, 255, 255)
+        love.graphics.draw(bg_gradient, x*img_w, h/8 - (img_h/2))
+    end
+
+    for x = 0, max_w do
+        love.graphics.draw(bg_poop, (x*img_w - offw*0.25) % (img_w*max_w+1) - img_w, h/8 - (img_h/2) - offh/40)
+    end
+
+    for x = 0, max_w do
+        love.graphics.draw(bg_buildings, (x*img_w - offw*0.5) % (img_w*max_w+1) - img_w, h/8 - (img_h/2) - offh/20)
+    end
+
+    for x = 0, max_w do
+        love.graphics.draw(bg_trees, (x*img_w - offw*0.75) % (img_w*max_w+1) - img_w, h/8 - (img_h/2) - offh/10)
+    end
+
+    love.graphics.pop()
 end
 
 local function drawSingleScreen()
@@ -47,8 +92,10 @@ local function drawSingleScreen()
     local offsety = love.graphics.getHeight()/2 /2 * 1.5
 
     love.graphics.push()
-        love.graphics.setColor(255, 255, 255)
-        love.graphics.draw(map.background, 0, 0, 0, bg_ratio, bg_ratio)
+        -- love.graphics.setColor(255, 255, 255)
+        -- love.graphics.draw(map.background, 0, 0, 0, bg_ratio, bg_ratio)
+
+        drawBackground(love.graphics.getWidth(), love.graphics.getHeight(), camera1_x, camera1_y)
 
         love.graphics.scale(2, 2)
         love.graphics.translate(math.round(-camera1_x+offsetx), math.round(-camera1_y+offsety))
@@ -127,8 +174,7 @@ local function drawSplitScreen()
 
         love.graphics.translate(math.round(-love.graphics.getWidth()/4), 0)
 
-        love.graphics.setColor(255, 255, 255)
-        love.graphics.draw(map.background, -camera1_x/50 + offsetx/2, -camera1_y/40, 0, bg_ratio, bg_ratio)
+        drawBackground(love.graphics.getWidth(), love.graphics.getHeight(), camera1_x, camera1_y)
 
         love.graphics.scale(2, 2)
         love.graphics.translate(math.round(-camera1_x+offsetx), math.round(-camera1_y+offsety))
@@ -170,8 +216,7 @@ local function drawSplitScreen()
         love.graphics.translate(math.round(love.graphics.getWidth()/4), 0)
 
         -- draw background
-        love.graphics.setColor(255, 255, 255)
-        love.graphics.draw(map.background, -camera2_x/50 - offsetx/2, -camera2_y/40, 0, bg_ratio, bg_ratio)
+        drawBackground(love.graphics.getWidth(), love.graphics.getHeight(), camera1_x, camera1_y)
 
         -- scale up
         love.graphics.scale(2, 2)
@@ -275,5 +320,14 @@ function love.draw()
         drawFontKerned(player2:getRespawnTime(), love.graphics.getWidth() - 250, 60, -8)
     end
 
+    if player.lastDamaged > 0 and player:isAlive() then
+        love.graphics.setColor(255, 0, 0, (player.lastDamaged/0.05) * 100)
+        love.graphics.rectangle('fill', 0, 0, 100, love.graphics.getHeight())
+    end
+
+    if player2.lastDamaged > 0 and player2:isAlive() then
+        love.graphics.setColor(255, 0, 0, (player2.lastDamaged/0.05) * 100)
+        love.graphics.rectangle('fill', love.graphics.getWidth()-100, 0, 100, love.graphics.getHeight())
+    end
 
 end

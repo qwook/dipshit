@@ -204,6 +204,8 @@ function changeMap(mapname, dontappend)
 
     extendMap()
     extendMap()
+
+    playMusic("disco.ogg", 1)
 end
 
 function extendMap()

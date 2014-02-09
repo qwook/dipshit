@@ -78,7 +78,7 @@ function Player:getRespawnTime()
 end
 
 function Player:inflictDamage(dmg)
-    if self.invuln >= 0 then return end
+    if self.invuln > 0 then return end
 
     self.lastDamaged = 0.05
     self.health = self.health - dmg
@@ -112,7 +112,7 @@ function Player:respawn()
 
     self.health = 100
     self.dead = false
-    self.invuln = 1
+    self.invuln = 3
     self.body:setGravityScale(1)
     self:forceCollisionRecalculation()
     self:setPosition(spawnx, spawny)

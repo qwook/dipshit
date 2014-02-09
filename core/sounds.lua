@@ -28,15 +28,36 @@ end
 -- Cache, load, and play music
 
 local musicLibrary = {}
+local musicSoundData = {}
+local currentSong = nil
+local musicTimeStart = 0
 
 function cacheMusic(name)
-    musicLibrary[name] = musicLibrary[name] or love.audio.newSource("assets/music/" .. name)
+    musicSoundData[name] = musicSoundData[name] or love.sound.newSoundData("assets/music/" .. name)
+    musicLibrary[name] = musicLibrary[name] or love.audio.newSource(musicSoundData[name])
 end
 
 function playMusic(name, volume)
     for name, source in pairs(musicLibrary) do source:stop() end
-    musicLibrary[name] = musicLibrary[name] or love.audio.newSource("assets/music/" .. name)
+    musicSoundData[name] = musicSoundData[name] or love.sound.newSoundData("assets/music/" .. name)
+    musicLibrary[name] = musicLibrary[name] or love.audio.newSource(musicSoundData[name])
     musicLibrary[name]:setVolume(volume)
-    musicLibrary[name]:setLooping(true)
+    -- musicLibrary[name]:setLooping(true)
+    musicTimeStart = love.timer.getTime()
     musicLibrary[name]:play()
+    currentSong = musicSoundData[name]
+end
+
+function getSample()
+    if not currentSong then return 0 end
+
+    local sampleRate = currentSong:getSampleRate()
+    local t = (love.timer.getTime() - musicTimeStart) * 100 * 100 * 100 * 100
+    local pos = math.floor(t / sampleRate)
+
+    print(pos, t, sampleRate, currentSong:getSampleCount())
+
+    if pos > currentSong:getSampleCount() then return end
+
+    return currentSong:getSample(pos)
 end
