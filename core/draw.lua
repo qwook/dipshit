@@ -21,6 +21,7 @@ local bg_gradient = loadImage("sprites/fk_0.gif")
 local bg_poop = loadImage("sprites/fk_1.gif")
 local bg_buildings = loadImage("sprites/fk_2.gif")
 local bg_trees = loadImage("sprites/fk_3.gif")
+seizure = 0
 function drawBackground(w, h, offw, offh)
 
     love.graphics.push()
@@ -39,8 +40,9 @@ function drawBackground(w, h, offw, offh)
 
     love.graphics.setColor(255, 255, 255)
 
+    love.graphics.setColor(124 + math.sin(love.timer.getTime())*124, 255, 255)
+
     for x = 0, max_w do
-        love.graphics.setColor(124 + (getSample() or 0)*124, 255, 255)
         love.graphics.draw(bg_gradient, x*img_w, h/8 - (img_h/2))
     end
 
@@ -329,5 +331,18 @@ function love.draw()
         love.graphics.setColor(255, 0, 0, (player2.lastDamaged/0.05) * 100)
         love.graphics.rectangle('fill', love.graphics.getWidth()-100, 0, 100, love.graphics.getHeight())
     end
+
+    -- local points = {}
+    -- for i = 0, 100 do
+    --     if getSample(i) ~= nil then
+    --         table.insert(points, i*5 + 50)
+    --         table.insert(points, getSample(i)*100 + 100)
+    --     end
+    -- end
+
+    -- if #points > 2 then
+    --     love.graphics.setColor(0, 255, 0)
+    --     love.graphics.line(points)
+    -- end
 
 end

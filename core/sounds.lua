@@ -38,26 +38,62 @@ function cacheMusic(name)
 end
 
 function playMusic(name, volume)
-    for name, source in pairs(musicLibrary) do source:stop() end
+    -- for name, source in pairs(musicLibrary) do source:stop() end
     musicSoundData[name] = musicSoundData[name] or love.sound.newSoundData("assets/music/" .. name)
     musicLibrary[name] = musicLibrary[name] or love.audio.newSource(musicSoundData[name])
     musicLibrary[name]:setVolume(volume)
     -- musicLibrary[name]:setLooping(true)
-    musicTimeStart = love.timer.getTime()
     musicLibrary[name]:play()
+    musicTimeStart = love.timer.getTime()
     currentSong = musicSoundData[name]
 end
 
-function getSample()
+function gaussian(alpha)
+    return math.exp(-math.pow(alpha - 0.5, 2) / 2)
+end
+
+for i = 0, 100 do
+    print(gaussian(i/100))
+end
+
+function getAverageGaussian()
+    local sum = 0
+    for i = 0, 20 do
+        local gaus = gaussian(i/10)
+        local sample = getSample(i) or 0
+
+        sum = sum + sample*gaus
+    end
+
+    return sum/20
+end
+
+function getAverageRateOfChange()
+    local sum = 0
+    local lastSample = getSample(0)
+    for i = 1, 50 do
+        if not lastsample then return 0 end
+        local sample = math.abs(getSample(i) or 0)
+        local diff = math.abs(sample - lastSample)
+        lastSample = sample
+
+        sum = sum + diff
+    end
+
+    return sum/50
+end
+
+function getSample(offset)
     if not currentSong then return 0 end
 
+    offset = offset or 0
+
     local sampleRate = currentSong:getSampleRate()
-    local t = (love.timer.getTime() - musicTimeStart) * 100 * 100 * 100 * 100
-    local pos = math.floor(t / sampleRate)
+    local channels = currentSong:getChannels()
+    local t = (love.timer.getTime() - musicTimeStart)
+    local pos = math.floor(t * sampleRate) * channels
 
-    print(pos, t, sampleRate, currentSong:getSampleCount())
-
-    if pos > currentSong:getSampleCount() then return end
+    if pos > currentSong:getSampleCount()*channels then return end
 
     return currentSong:getSample(pos)
 end

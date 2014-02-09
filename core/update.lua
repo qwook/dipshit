@@ -1,4 +1,6 @@
 
+knob = 0
+
 local updateList = {}
 function onNextUpdate(cb)
     table.insert(updateList, cb)
@@ -15,6 +17,28 @@ function clearUpdates()
 end
 
 function love.update(dt)
+
+    local sample = getSample()
+    if sample <= 0.12 then
+        sample = 0
+    else
+        sample = sample * 5
+    end
+
+    -- seizure = math.approach(seizure, sample, 10 / math.abs(seizure - sample))
+    if (getAverageRateOfChange() * 100) > 0.9 then
+        seizure = math.approach2(seizure, sample, 100*dt)
+    else
+        seizure = math.approach2(seizure, sample, 10*dt)
+    end
+
+    if love.keyboard.isDown("9") then
+        knob = knob - 1
+    end
+
+    if love.keyboard.isDown("0") then
+        knob = knob + 1
+    end
 
     local tmp = {}
     for k,v in pairs(timeouts) do
