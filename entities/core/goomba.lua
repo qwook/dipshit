@@ -20,6 +20,7 @@ function Goomba:initialize()
     self.range = 250 -- range of attack
     self.shootFacingPlayer = false -- shoot only facing player
     self.canAim = true -- can it aim at the player?
+    self.stopBeforeShooting = false -- stop before shooting?
 
     -- dependent variables
     self.nextAttack = 0
@@ -41,6 +42,7 @@ function Goomba:postSpawn()
     self.range = tonumber(self:getProperty("range") or 250) -- range of attack
     self.shootFacingPlayer = self:getProperty("shootfaceingplayer") == "true" -- shoot only facing player
     self.canAim = self:getProperty("canaim") == "true" -- shoot only facing player
+    self.stopBeforeShooting = self:getProperty("stopbeforeshooting") == "true" -- shoot only facing player
 end
 
 function Goomba:inflictDamage(dmg)
@@ -154,32 +156,29 @@ function Goomba:update(dt)
 
     local vx, vy = self:getVelocity()
 
+    local vel = 0
     if self.dir == -1 then
         self.ang = 1
         if vx < 20 then
-            self:applyForce(1000, 0)
+            vel = 1000
         else
-            self:applyForce(300, 0)
+            vel = 300
         end
     elseif self.dir == 1 or self.dir == 0 then
         self.ang = -1
         if vx > -20 then
-            self:applyForce(-1000, 0)
+            vel = -1000
         else
-            self:applyForce(-300, 0)
+            vel = -300
         end
     end
 
-    -- if we seem to be stuck, try going a different direction.
-    if math.length(self:getVelocity()) == 0 then
-        if self.dir == -1 then
-            -- self.dir = 1
-            -- self:applyForce(-300, 0)
-        elseif self.dir == 1 then
-            -- self.dir = -1
-            -- self:applyForce(100, 0)
-        end
+    if not self.stopBeforeShooting or (self.stopBeforeShooting and not (self.nextReload < 0.5)) then
+        self:applyForce(vel, 0)
+    elseif (self.stopBeforeShooting and (self.nextReload < 0.5)) then
+        self:applyForce(-vx, 0)
     end
+
 end
 
 function Goomba:beginContact(other, contact, isother)

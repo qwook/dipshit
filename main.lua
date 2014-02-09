@@ -25,6 +25,7 @@ Text =          require("entities.text")
 Timer =         require("entities.timer")
 MisterF =       require("entities.misterf")
 Goomba =        require("entities.core.goomba")
+Gorilla =        require("entities.npc.gorilla")
 
 PhysBox =       require("entities.physbox")
 Button =        require("entities.button")
