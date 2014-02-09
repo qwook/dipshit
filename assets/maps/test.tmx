@@ -8,17 +8,105 @@
  </imagelayer>
  <layer name="SharedLayer" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt1jENAEAMA7HwKX9+T6BTpE5vS0GQ5SbJlAMAoLO1lL660bauPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4F8PUisFYQ==
+   eJzt1kENADAIA8D6wb+/WeBBeIy7pBbaVpIaDsCmTgfpKYC7pr+uHQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP897C4IZw==
   </data>
  </layer>
  <layer name="SharedCollision" width="100" height="100" opacity="0.38">
   <data encoding="base64" compression="zlib">
-   eJzt1jENAEAMA7HQKH+iT6BTpE5vS0GQ5SbJlAMAoLO1lL660bauPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4F8PynYDIQ==
+   eJzt1kENADAIA8DawL/RWeBBeIy7pBbaVpIaDsCmTgfpKYC7pr+uHQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP891qAE4w==
   </data>
  </layer>
  <objectgroup name="Objects" width="100" height="100">
   <object name="player1" gid="1" x="96" y="224"/>
   <object name="player2" gid="1" x="128" y="224"/>
-  <object type="Goomba" gid="1" x="352" y="224"/>
+  <object type="Goomba" gid="1" x="352" y="224">
+   <properties>
+    <property name="attackdelay" value="0"/>
+    <property name="cainaim" value="false"/>
+    <property name="clipsize" value="3"/>
+    <property name="cone" value="40"/>
+    <property name="reloaddelay" value="1"/>
+   </properties>
+  </object>
+  <object name="start" gid="17" x="0" y="256"/>
+  <object name="next" gid="17" x="672" y="256"/>
+  <object type="Director" gid="21" x="416" y="224">
+   <properties>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object type="Director" gid="21" x="320" y="224">
+   <properties>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object type="Goomba" gid="1" x="224" y="96">
+   <properties>
+    <property name="attackdelay" value="0.75"/>
+    <property name="canaim" value="true"/>
+    <property name="clipsize" value="1"/>
+    <property name="cone" value="70"/>
+    <property name="reloaddelay" value="0"/>
+   </properties>
+  </object>
+  <object type="Director" gid="21" x="192" y="96">
+   <properties>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object type="Director" gid="21" x="288" y="96">
+   <properties>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object type="Goomba" gid="1" x="512" y="96">
+   <properties>
+    <property name="attackdelay" value="0.5"/>
+    <property name="canaim" value="false"/>
+    <property name="clipsize" value="1"/>
+    <property name="cone" value="70"/>
+    <property name="reloaddelay" value="0"/>
+   </properties>
+  </object>
+  <object type="Director" gid="21" x="576" y="96">
+   <properties>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object type="Director" gid="21" x="480" y="96">
+   <properties>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object type="Goomba" gid="1" x="272" y="67">
+   <properties>
+    <property name="attackdelay" value="0.75"/>
+    <property name="canaim" value="true"/>
+    <property name="clipsize" value="1"/>
+    <property name="cone" value="70"/>
+    <property name="initialdelay" value="1"/>
+    <property name="reloaddelay" value="0"/>
+   </properties>
+  </object>
+  <object type="Goomba" gid="1" x="249" y="63">
+   <properties>
+    <property name="attackdelay" value="0.75"/>
+    <property name="canaim" value="true"/>
+    <property name="clipsize" value="1"/>
+    <property name="cone" value="70"/>
+    <property name="initialdelay" value="0.75"/>
+    <property name="reloaddelay" value="0"/>
+   </properties>
+  </object>
+  <object type="Goomba" gid="1" x="230" y="63">
+   <properties>
+    <property name="attackdelay" value="0.75"/>
+    <property name="canaim" value="true"/>
+    <property name="clipsize" value="1"/>
+    <property name="cone" value="70"/>
+    <property name="initialdelay" value="0.25"/>
+    <property name="reloaddelay" value="0"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

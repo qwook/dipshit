@@ -30,6 +30,7 @@ PhysBox =       require("entities.physbox")
 Button =        require("entities.button")
 Toggle =        require("entities.toggle")
 Trigger =       require("entities.trigger")
+Director =      require("entities.director")
 Prop =          require("entities.prop")
 LayerObject =   require("entities.layerobject")
 Trampoline =    require("entities.trampoline")
@@ -158,8 +159,12 @@ end
 
 function changeMap(mapname, dontappend)
 
-    if world then
-        world:destroy()
+    if maps then
+        table.clear(maps)
+    end
+
+    if map then
+        map:destroy()
     end
 
     if player then
@@ -170,6 +175,10 @@ function changeMap(mapname, dontappend)
     if player2 then
         player2:destroy()
         player2 = nil
+    end
+
+    if world then
+        world:destroy()
     end
 
     world = love.physics.newWorld()
@@ -188,12 +197,52 @@ function changeMap(mapname, dontappend)
         map = Map:new("assets/maps/" .. mapname)
     end
 
-    maps = {}
-    local shit = Map:new("assets/maps/test", 400, 0)
-    shit:spawnObjects()
-    table.insert(maps, shit)
-
     map:spawnObjects()
+
+    maps = {}
+
+    for i = 1, 5 do
+        extendMap()
+    end
+end
+
+function extendMap()
+    local prevmap = maps[#maps] or map
+
+    local nx, ny = prevmap:getNext()
+
+    local newmap = Map:new("assets/maps/test", nx, ny)
+    newmap:spawnObjects()
+    table.insert(maps, newmap)
+
+    print("extended the map")
+end
+
+function truncateMap()
+    maps[1]:destroy()
+    table.remove(maps, 1)
+
+    print("removed part of the map")
+end
+
+function shouldExtend()
+    local p1x, p1y = player:getPosition()
+    local p2x, p2y = player2:getPosition()
+    local nx, ny = maps[#maps]:getNext()
+    if math.distance(p1x, p1y, nx, ny) < 400 or math.distance(p2x, p2y, nx, ny) < 400 then
+        return true
+    end
+    return false
+end
+
+function shouldTruncate()
+    local p1x, p1y = player:getPosition()
+    local p2x, p2y = player2:getPosition()
+    local nx, ny = maps[1]:getNext()
+    if (math.distance(p1x, p1y, nx, ny) > 400 and p1x > nx) and (math.distance(p2x, p2y, nx, ny) > 400 and p2x > nx) then
+        return true
+    end
+    return false
 end
 
 function reset()
@@ -215,6 +264,8 @@ function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.graphics.setBackgroundColor(134, 200, 255)
     love.physics.setMeter(60)
+
+    splitFramebuffer = love.graphics.newCanvas()
 
     input = Input:new()
     input2 = Input:new()

@@ -7,6 +7,7 @@ MisterF.spritesheet = SpriteSheet:new("sprites/misterf.png", 64, 32)
 
 function MisterF:initialize()
     BaseEntity.initialize(self)
+    self.type = "TYPE"
     self.collisiongroup = "shared"
     self.nextAttack = 0
     self.coconut = nil

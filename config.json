@@ -18,7 +18,8 @@
 			"d" : "right",
 			"w" : "lookup",
 			"s" : "lookdown",
-			"p" : "select",
+			"r" : "select",
+			"t" : "start",
 			"f" : "attack",
 			"g" : "jump"
 		},
@@ -62,14 +63,12 @@
 		},
 		"qwerty" :
 		{
-			"up" 	 : "jump",
-			"down"   : "crouch",
-			"rshift" : ":/",
-			"/" 	 : ":|",
-			"r" 	 : "select",
-			"t" 	 : "start",
-			"left"   : "left",
-			"right"  : "right"
+			"left" : "left",
+			"right" : "right",
+			"up" : "lookup",
+			"down" : "lookdown",
+			"/" : "attack",
+			"." : "jump"
 		},
 		"joystick" :
 		{

@@ -11,12 +11,13 @@ Physical =      require("entities.core.physical")
 SpriteSheet =   require("util.spritesheet")
 Particle =      require("entities.core.particle")
 WalkingDust =   require("entities.particles.walkingdust")
+MuzzleFlash =   require("entities.particles.muzzleflash")
 DebugArrow =    require("entities.particles.debugarrow")
 GhostPlayer =   require("entities.particles.ghostplayer")
 Bullet =   require("entities.bullet")
 
 Player = class('Player', Physical)
-Player.spritesheet = SpriteSheet:new("sprites/players.png", 32, 32)
+Player.spritesheet = SpriteSheet:new("sprites/dude.png", 32, 32)
 
 function Player:initialize()
     self.name = "Stewart"
@@ -32,10 +33,6 @@ function Player:initialize()
     self.contacts = {}
     self.contactOwners = {}
 
-    self.floorangle = 0
-    self.floornx = 0
-    self.floorny = 0
-
     self.shortJump = 0
     self.nextJump = 0
 
@@ -48,7 +45,18 @@ function Player:initialize()
 
     self.nextDust = 0
 
+    self.destroyed = false
+
+    self.lastDamaged = 0
+
     self:initPhysics()
+end
+
+function Player:inflictDamage(dmg)
+    self.lastDamaged = 0.05
+    -- self.health = self.health - dmg
+    -- if self.health < 0 then
+    -- end
 end
 
 function Player:event_multiplyvelocity(x, y)
@@ -100,7 +108,13 @@ end
 
 function Player:initPhysics()
     self.body = love.physics.newBody(world, 0, 0, 'dynamic')
-    self.shape = love.physics.newPolygonShape(-14, -14, -14, 0, 14*math.cos(math.pi*(3/4)), 14*math.sin(math.pi*(3/4)), 0, 14, 14*math.cos(math.pi/4), 14*math.sin(math.pi/4), 14, 0, 14, -14)
+    self.shape = love.physics.newPolygonShape(-10, -30,
+                                              -10, 10,
+                                              10*math.cos(math.pi*(3/4)), 10 + 10*math.sin(math.pi*(3/4)),
+                                              0, 10,
+                                              10*math.cos(math.pi/4), 10 + 10*math.sin(math.pi/4),
+                                              10, 10,
+                                              10, -30)
     self.fixture = love.physics.newFixture(self.body, self.shape, 1)
 
     self.fixture:setUserData(self)
@@ -111,6 +125,10 @@ function Player:initPhysics()
 end
 
 function Player:destroy()
+    self.fixture:destroy()
+    self.body:destroy()
+
+    self.destroyed = true
     for k,v in pairs(self) do
         self[k] = nil
     end
@@ -123,7 +141,6 @@ function Player:getFloor()
     for k, contact in pairs(self.contacts) do
         local x1, y1, x2, y2 = contact:getPositions()
         if ((y1 or y-1) > y and (y2 or y+1) > y) then
-            self.floornx, self.floorny = contact:getNormal()
             return self.contactOwners[contact], contact
         end
     end
@@ -138,20 +155,37 @@ end
 
 function Player:update(dt)
 
-    -- handle animation --
+    local looking = self.controller:isKeyDown("lookup") or self.controller:isKeyDown("lookdown")
 
+    -- handle animation and gun angle --
     if self.controller:wasKeyPressed("left") then
         self.facing = 'left'
-        self.aimangle = math.pi
+        if not looking then
+            self.aimangle = math.pi
+        end
     elseif self.controller:wasKeyPressed("right")  then
         self.facing = 'right'
-        self.aimangle = 0
+        if not looking then
+            self.aimangle = 0
+        end
     end
 
     if self.controller:isKeyDown("lookup") then
-        self.aimangle = math.lerpAngle(self.aimangle, -math.pi/2, 5*dt)
+        if self.controller:isKeyDown("left") then
+            self.aimangle = math.lerpAngle(self.aimangle, -math.pi/2 - math.pi/4, 5*dt)
+        elseif self.controller:isKeyDown("right") then
+            self.aimangle = math.lerpAngle(self.aimangle, -math.pi/2 + math.pi/4, 5*dt)
+        else
+            self.aimangle = math.lerpAngle(self.aimangle, -math.pi/2, 5*dt)
+        end
     elseif self.controller:isKeyDown("lookdown") then
-        self.aimangle = math.lerpAngle(self.aimangle, math.pi/2, 5*dt)
+        if self.controller:isKeyDown("left") then
+            self.aimangle = math.lerpAngle(self.aimangle, math.pi/2 + math.pi/4, 5*dt)
+        elseif self.controller:isKeyDown("right") then
+            self.aimangle = math.lerpAngle(self.aimangle, math.pi/2 - math.pi/4, 5*dt)
+        else
+            self.aimangle = math.lerpAngle(self.aimangle, math.pi/2, 5*dt)
+        end
     else
         if self.facing == 'left' then
             self.aimangle = math.lerpAngle(self.aimangle, math.pi, 5*dt)
@@ -163,11 +197,18 @@ function Player:update(dt)
 
     -- handle shooting
     if self.controller:wasKeyPressed("attack") then
+        local smoke = MuzzleFlash:new()
+        smoke:setAngle(self.aimangle)
+        local x, y = self:getPosition()
+        smoke:setPosition(x+math.cos(self.aimangle)*50, y+math.sin(self.aimangle)*50)
+        smoke:spawn()
+
         local bullet = Bullet:new()
         bullet:setPosition(self:getPosition())
         bullet:initPhysics()
         bullet:setVelocity(750*math.cos(self.aimangle), 750*math.sin(self.aimangle))
         bullet:spawn()
+
     end
 
 
@@ -260,12 +301,17 @@ function Player:update(dt)
 
         -- we just jumped, allow for a longer jump
         if self.shortJump > 0 and self.controller:isKeyDown("jump") then
-            self.body:applyForce(0, -600)
+            self.body:applyForce(0, -750)
             self.shortJump = self.shortJump - dt
         else
             -- OCD.. constantly make sure we can't short jump
             self.shortJump = 0
         end
+    end
+
+    -- remove time from the flashing
+    if self.lastDamaged >= 0 then
+        self.lastDamaged = self.lastDamaged - dt
     end
 
 end
@@ -277,7 +323,7 @@ function Player:draw()
     love.graphics.push()
     love.graphics.translate(x, y)
     -- love.graphics.rotate(r)
-    love.graphics.rotate(self.ang)
+    -- love.graphics.rotate(self.ang)
 
     if self.facing == 'right' then
         love.graphics.scale(1, 1)
@@ -289,27 +335,55 @@ function Player:draw()
 
     self:drawPlayer()
 
+
+    -- draw damage flash
+    if self.lastDamaged >= 0 then
+        love.graphics.setStencil(function ()
+            love.graphics.setShader(shaders.mask_effect)
+            self:drawPlayer()
+            love.graphics.setShader()
+        end)
+        love.graphics.setColor(255, 0, 0, 150)
+        -- guesstimate rectangle
+        love.graphics.rectangle("fill", -100, -100, 200, 200)
+        love.graphics.setStencil()
+    end
+
+
     love.graphics.pop()
+
+    -- love.graphics.setColor(255, 255, 255, 50)
+    -- love.graphics.polygon("fill", self.body:getWorldPoints( self.shape:getPoints() ))
 end
 
 function Player:drawPlayer()
-    -- local anim = 5
-    local anim = 0
+    local anim = 9
     if self.moving then
-        anim = math.floor(love.timer.getTime()*10) % 4
-        -- anim = math.floor(love.timer.getTime()*20) % 6
+        anim = math.floor(love.timer.getTime()*20) % 8
     end
 
-    local offset = 0
-    if self.crouching then
-        anim = 2
-        offset = 6
+    love.graphics.push()
+    love.graphics.scale(2)
+
+    if self.moving then
+        self.spritesheet:draw(anim, 0, -13, -19)
+    else
+        self.spritesheet:draw(9, 2, -13, -19)
     end
 
+    if self.facing == "right" then
+        love.graphics.rotate(self.aimangle)
+    else
+        love.graphics.rotate(math.pi-self.aimangle)
+    end
 
-    self.spritesheet:draw(anim, 1, -16, -18 + offset)
-    -- self.spritesheet:draw(anim, 0, -16, -18 + offset)
-    self.spritesheet:draw(self.expression, 0, -16, -18 + offset)
+    if anim > 0 and anim <= 3 then
+        love.graphics.translate(0, 1)
+    end
+
+    self.spritesheet:draw(10, 2, -13, -19)
+
+    love.graphics.pop()
 end
 
 function Player:getVelocity()
@@ -350,6 +424,8 @@ end
 
 -- the player hit something
 function Player:beginContact(other, contact, isother)
+    if self.destroyed then return end
+
     self.isother = isother
 
     if not other.solid then return end
@@ -405,16 +481,6 @@ function Player:beginContact(other, contact, isother)
     local id, id2 = contact:getChildren()
     if isother then id = id2 end -- `isother` means we are the second object
 
-    if ((y1 or y-1) > y and (y2 or y+1) > y) then -- and ((math.acos(dot) <= math.pi / 4 + 0.1) or (math.acos(dot) >= math.pi * (3 / 4) - 0.1)) then        
-        self.floorangle = math.atan2(normy, normx)
-        self.floornx = normx
-        self.floorny = normy
-    else
-        -- if it isn't a floor, set the friction to 0
-        -- we want to slide down walls, not cling onto them
-        --contact:setFriction(0)
-    end
-
     if other.type == "PLAYER" then
         contact:setFriction(1.5)
     end
@@ -422,6 +488,8 @@ function Player:beginContact(other, contact, isother)
 end
 
 function Player:endContact(other, contact, isother)
+    if self.destroyed then return end
+
     local normx, normy = contact:getNormal()
     local cx, cy, cz = math.crossproduct(normx, normy, 0, 0, 1, 0)
 
@@ -437,6 +505,8 @@ function Player:endContact(other, contact, isother)
 end
 
 function Player:postSolve(other, contact, nx, ny, isother)
+    if self.destroyed then return end
+
     if self.moving and self.nextDust <= 0 and self:getFloor() ~= false then
         local smoke = WalkingDust:new()
         smoke:spawn()
@@ -468,24 +538,17 @@ function Cindy:initialize()
 end
 
 function Cindy:drawPlayer()
-    -- local anim = 5
-    local anim = 0
+    local anim = 8
     if self.moving then
-        anim = math.floor(love.timer.getTime()*10) % 4
-        -- anim = math.floor(love.timer.getTime()*20) % 6
+        anim = math.floor(love.timer.getTime()*20) % 8
     end
 
-    local offset = 0
-    if self.crouching then
-        anim = 2
-        offset = 6
-    end
+    love.graphics.push()
+    love.graphics.scale(2)
 
+    self.spritesheet:draw(anim, 1, -13, -20)
 
-    self.spritesheet:draw(anim, 3, -16, -18 + offset)
-    -- self.spritesheet:draw(anim, 0, -16, -18 + offset)
-    self.spritesheet:draw(self.expression, 2, -16, -18 + offset)
-
+    love.graphics.pop()
 end
 
 

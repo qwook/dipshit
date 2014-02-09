@@ -330,6 +330,7 @@ function BaseEntity:setMass(mass)
 end
 
 function BaseEntity:setFixedRotation(bool)
+    if not self.body then return end
     self.body:setFixedRotation(bool)
 end
 

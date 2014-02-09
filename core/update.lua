@@ -87,6 +87,14 @@ function love.update(dt)
         updateList[1]()
         table.remove(updateList, 1)
     end
+
+    if shouldExtend() then
+        extendMap()
+    end
+
+    if shouldTruncate() then
+        truncateMap()
+    end
 end
 
 function updateJoystickDetection()

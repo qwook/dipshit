@@ -20,6 +20,15 @@ function Map:initialize(mapname, offx, offy)
 
     self.tiledmap = STI.new(mapname)
 
+    if offx then
+
+        local ox, oy = self:getOffset()
+
+        self.offx = self.offx - ox
+        self.offy = self.offy - oy + 32
+
+    end
+
     self.background = self:getImageLayer("Background")
 
     local tw = self.tiledmap.tilewidth
@@ -46,6 +55,21 @@ function Map:destroy()
 
     for k, v in pairs(self) do
         self[k] = nil
+    end
+end
+
+function Map:getNext()
+    local n = self:findObjectsByName("next")[1]
+    if n then
+        return n:getPosition()
+    end
+end
+
+function Map:getOffset()
+    for _, v in ipairs(self:getObjectsLayer("Objects")) do
+        if v.name == "start" then
+            return v.x + 16 + 32, v.y + 16 + 32
+        end
     end
 end
 
@@ -122,7 +146,10 @@ function Map:spawnObjects()
         if v.fixture and v.body then
             v.fixture:setFriction(v:getProperty("friction") or 0.1)
             v.body:setMass(v:getProperty("mass") or 1)
-            v.body:setFixedRotation(v:getProperty("disablerotation") == "true")
+
+            if v:getProperty("disablerotation") and v:getProperty("disablerotation") == "true" then
+                v.body:setFixedRotation(true)
+            end
         end
     end
 
