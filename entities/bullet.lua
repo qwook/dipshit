@@ -47,7 +47,7 @@ function Bullet:beginContact(other, contact, isother)
     onNextUpdate(function()
         if other.inflictDamage then
 
-            local blood = Blood:new()
+            local blood = Blood:new(other.blood)
             blood:setPosition(x - nx*5, y - ny*5)
             blood:setAngle(math.atan2(ny, nx))
             blood:spawn()

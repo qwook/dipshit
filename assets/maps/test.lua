@@ -562,6 +562,46 @@ return {
             ["initialdelay"] = "0.25",
             ["reloaddelay"] = "0"
           }
+        },
+        {
+          name = "",
+          type = "SlimeGirl",
+          shape = "rectangle",
+          x = 512,
+          y = 224,
+          width = 0,
+          height = 0,
+          gid = 1,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "Director",
+          shape = "rectangle",
+          x = 480,
+          y = 224,
+          width = 0,
+          height = 0,
+          gid = 21,
+          visible = true,
+          properties = {
+            ["direction"] = "right"
+          }
+        },
+        {
+          name = "",
+          type = "Director",
+          shape = "rectangle",
+          x = 576,
+          y = 224,
+          width = 0,
+          height = 0,
+          gid = 21,
+          visible = true,
+          properties = {
+            ["direction"] = "left"
+          }
         }
       }
     }

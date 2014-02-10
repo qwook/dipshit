@@ -93,6 +93,21 @@ function Goomba:getGoal()
     return goal
 end
 
+function Goomba:getAimAngle()
+    local x, y = self:getPosition()
+    local goal = self:getGoal()
+    local aimangle
+    if self.canAim and goal then
+        local gx, gy = goal:getPosition()
+        local ang = math.atan2(gy - y, gx - x) or -1
+        aimangle = ang + math.random(-self.cone, self.cone)/180
+    else
+        aimangle = (math.pi/2 - self.ang * (math.pi/2)) + math.random(-self.cone, self.cone)/180
+    end
+
+    return aimangle or 0
+end
+
 function Goomba:canAttack()
     local goal
     local x, y = self:getPosition()
@@ -141,15 +156,7 @@ function Goomba:update(dt)
         else
             self.nextAttack = self.attackDelay
 
-            local aimangle
-            local goal = self:getGoal()
-            if self.canAim and goal then
-                local gx, gy = goal:getPosition()
-                local ang = math.atan2(gy - y, gx - x) or -1
-                aimangle = ang + math.random(-self.cone, self.cone)/180
-            else
-                aimangle = (math.pi/2 - self.ang * (math.pi/2)) + math.random(-self.cone, self.cone)/180
-            end
+            local aimangle = self:getAimAngle()
 
             local bullet = NPCBullet:new()
             bullet:setPosition(x + self.bulletOffsetX*self.ang, y + self.bulletOffsetY)
@@ -192,24 +199,26 @@ function Goomba:update(dt)
 end
 
 function Goomba:beginContact(other, contact, isother)
-    local normx, normy = contact:getNormal()
+    -- this code was used to detect walls and to reverse the direction
+    -- of the npc when it hits a wall
 
-    if isother == false then
-        normx = -normx
-        normy = -normy
-    end
+    -- local normx, normy = contact:getNormal()
 
-    -- detect a floor
-    local x, y = self:getPosition()
-    local x1, y1, x2, y2 = contact:getPositions()
+    -- if isother == false then
+    --     normx = -normx
+    --     normy = -normy
+    -- end
 
-    local id, id2 = contact:getChildren()
-    if isother then id = id2 end -- `isother` means we are the second object
+    -- local x, y = self:getPosition()
+    -- local x1, y1, x2, y2 = contact:getPositions()
 
-    if not (((y1 or y-1) > y+10 and (y2 or y+1) > y+10)) then
-        local _, _, z = math.crossproduct(normx, normy, 0, 0, -1, 0)
+    -- local id, id2 = contact:getChildren()
+    -- if isother then id = id2 end -- `isother` means we are the second object
+
+    -- if not (((y1 or y-1) > y+10 and (y2 or y+1) > y+10)) then
+    --     local _, _, z = math.crossproduct(normx, normy, 0, 0, -1, 0)
         -- self.dir = math.sign(z)
-    end
+    -- end
 end
 
 function Goomba:draw()

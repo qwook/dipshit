@@ -8,8 +8,8 @@ Input = class("Input")
 -- keyBoardLayout = "arcade" -- todo: figure a way out to load config stuff
 keyBoardLayout = "qwerty"
 
-timeToPause = 100
-timeToReset = 100
+timeToPause = 1000000
+timeToReset = 1000000
 afkTimer = 0 -- don't touch this
 
 IN_KEYS = {

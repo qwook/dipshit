@@ -25,7 +25,8 @@ Text =          require("entities.text")
 Timer =         require("entities.timer")
 MisterF =       require("entities.misterf")
 Goomba =        require("entities.core.goomba")
-Gorilla =        require("entities.npc.gorilla")
+Gorilla =       require("entities.npc.gorilla")
+SlimeGIrl =     require("entities.npc.slimegirl")
 
 PhysBox =       require("entities.physbox")
 Button =        require("entities.button")
@@ -205,7 +206,8 @@ function changeMap(mapname, dontappend)
     extendMap()
     extendMap()
 
-    playMusic("disco.ogg", 1)
+    -- playMusic("Splash_Woman_Hip-Hop_Remix.ogg", 1)
+    playMusic("Anamanaguchi_-_Endless_Fantasy.ogg", 1)
 end
 
 function extendMap()

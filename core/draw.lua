@@ -30,7 +30,7 @@ function drawBackground(w, h, offw, offh)
     local img_w = bg_gradient:getWidth()
     local img_h = bg_gradient:getHeight()
 
-    local max_w = math.floor(w/(img_w*4))*2
+    local max_w = math.floor(w/(img_w*2))*2
 
     love.graphics.setColor(0, 255, 255)
     love.graphics.rectangle('fill', 0, 0, w/4, h/8)
@@ -40,22 +40,24 @@ function drawBackground(w, h, offw, offh)
 
     love.graphics.setColor(255, 255, 255)
 
-    love.graphics.setColor(124 + math.sin(love.timer.getTime())*124, 255, 255)
+    -- love.graphics.setColor(124 + math.sin(love.timer.getTime())*124, 255, 255)
+    love.graphics.setColor(124 + seizure*124, 255, 255)
+    -- print(getSample())
 
     for x = 0, max_w do
         love.graphics.draw(bg_gradient, x*img_w, h/8 - (img_h/2))
     end
 
     for x = 0, max_w do
-        love.graphics.draw(bg_poop, (x*img_w - offw*0.25) % (img_w*max_w+1) - img_w, h/8 - (img_h/2) - offh/40)
+        love.graphics.draw(bg_poop, (x*img_w - offw*0.15*0.25) % (img_w*max_w+1) - img_w, h/8 - (img_h/2) - offh/40)
     end
 
     for x = 0, max_w do
-        love.graphics.draw(bg_buildings, (x*img_w - offw*0.5) % (img_w*max_w+1) - img_w, h/8 - (img_h/2) - offh/20)
+        love.graphics.draw(bg_buildings, (x*img_w - offw*0.25*0.25) % (img_w*max_w+1) - img_w, h/8 - (img_h/2) - offh/20)
     end
 
     for x = 0, max_w do
-        love.graphics.draw(bg_trees, (x*img_w - offw*0.75) % (img_w*max_w+1) - img_w, h/8 - (img_h/2) - offh/10)
+        love.graphics.draw(bg_trees, (x*img_w - offw*0.5*0.25) % (img_w*max_w+1) - img_w, h/8 - (img_h/2) - offh/10)
     end
 
     love.graphics.pop()
@@ -322,15 +324,15 @@ function love.draw()
         drawFontKerned(player2:getRespawnTime(), love.graphics.getWidth() - 250, 60, -8)
     end
 
-    if player.lastDamaged > 0 and player:isAlive() then
-        love.graphics.setColor(255, 0, 0, (player.lastDamaged/0.05) * 100)
-        love.graphics.rectangle('fill', 0, 0, 100, love.graphics.getHeight())
-    end
+    -- if player.lastDamaged > 0 and player:isAlive() then
+    --     love.graphics.setColor(255, 0, 0, (player.lastDamaged/0.05) * 100)
+    --     love.graphics.rectangle('fill', 0, 0, 100, love.graphics.getHeight())
+    -- end
 
-    if player2.lastDamaged > 0 and player2:isAlive() then
-        love.graphics.setColor(255, 0, 0, (player2.lastDamaged/0.05) * 100)
-        love.graphics.rectangle('fill', love.graphics.getWidth()-100, 0, 100, love.graphics.getHeight())
-    end
+    -- if player2.lastDamaged > 0 and player2:isAlive() then
+    --     love.graphics.setColor(255, 0, 0, (player2.lastDamaged/0.05) * 100)
+    --     love.graphics.rectangle('fill', love.graphics.getWidth()-100, 0, 100, love.graphics.getHeight())
+    -- end
 
     -- local points = {}
     -- for i = 0, 100 do

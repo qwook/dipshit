@@ -4,9 +4,10 @@ Particle = require("entities.core.particle")
 Blood = class("Particle", Particle)
 Blood.spritesheet = SpriteSheet:new("sprites/blood.png", 32, 32)
 
-function Blood:initialize()
+function Blood:initialize(color)
     Particle.initialize(self)
 
+    self.color = color or {r=255, g=0, b=0}
     self.scale = 1
     self.velx = 0
     self.vely = 0
@@ -33,7 +34,7 @@ end
 
 function Blood:draw()
     love.graphics.scale(2)
-    love.graphics.setColor(255, 0, 0)
+    love.graphics.setColor(self.color.r, self.color.g, self.color.b)
     if self.flashtime > 0 then
         love.graphics.setColor(255, 255, 255)
     end

@@ -16,28 +16,25 @@ function clearUpdates()
     table.clear(updateList)
 end
 
+seizure = 0
+
 function love.update(dt)
 
-    local sample = getSample()
-    if sample <= 0.12 then
-        sample = 0
+    local smpl, beatline, tempo = getSample()
+    if smpl == 1 then
+        seizure = 1
     else
-        sample = sample * 5
-    end
-
-    -- seizure = math.approach(seizure, sample, 10 / math.abs(seizure - sample))
-    if (getAverageRateOfChange() * 100) > 0.9 then
-        seizure = math.approach2(seizure, sample, 100*dt)
-    else
-        seizure = math.approach2(seizure, sample, 10*dt)
+        seizure = math.approach2(seizure, 0, (3+knob)*dt)
     end
 
     if love.keyboard.isDown("9") then
         knob = knob - 1
+        print(knob)
     end
 
     if love.keyboard.isDown("0") then
         knob = knob + 1
+        print(knob)
     end
 
     local tmp = {}

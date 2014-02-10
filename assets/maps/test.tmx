@@ -100,5 +100,16 @@
     <property name="reloaddelay" value="0"/>
    </properties>
   </object>
+  <object type="SlimeGirl" gid="1" x="512" y="224"/>
+  <object type="Director" gid="21" x="480" y="224">
+   <properties>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object type="Director" gid="21" x="576" y="224">
+   <properties>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
