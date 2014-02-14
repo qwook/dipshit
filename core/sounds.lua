@@ -82,12 +82,53 @@ function gaussian(alpha)
 end
 
 function getPitch()
-    for i = 1, 100 do
-        
+    if not currentSong then return 0 end
+
+    local n = 8192
+    local binsize = 8000
+    -- local binsize = currentSong:getSampleRate()/n
+    local sample = getWindowedSample(n)
+    sample[0] = 0
+    local imaginary = {}
+    imaginary[0] = 0
+    for i = 1, n do
+        imaginary[i] = 0
     end
+    fft(binsize, sample, imaginary)
+
+    -- find the peak
+
+    local maxVal = -1
+    local maxIndex = -1
+
+    for j = 1, math.floor(binsize/2) do
+        local v = sample[j-1] * sample[j-1] + imaginary[j-1] * imaginary[j-1]
+        if (v > maxVal) then
+            maxVal = v
+            maxIndex = j
+        end
+    end
+
+    return maxIndex, maxVal
 end
 
 function getSample(offset)
+    if not currentSong then return 0 end
+
+    local t = (love.timer.getTime() - musicTimeStart)
+    local pcm = t*currentSong:getSampleRate()
+
+    if
+        (pcm + offset >= currentSong:getSampleCount()) or
+        (pcm + offset < 0)
+    then
+        return 0
+    end
+
+    return currentSong:getSample(pcm + offset) or 0
+end
+
+function getBeat()
     if not currentSong then return 0 end
 
     local t = (love.timer.getTime() - musicTimeStart)
@@ -102,6 +143,118 @@ function getSample(offset)
 
     return peak,
         curBeat[2][s] or 0
+end
+
+-- pitch detection (not mine)
+
+function buildHanWindow(size)
+    local window = {}
+    for i = 1, size do
+        window[i] = .5 * (1 - math.cos( 2 * math.pi * (i-1) / (size-1) ))
+    end
+    return window
+end
+
+function getWindowedSample(size)
+    local window = buildHanWindow(size)
+    local sample = {}
+    for i = 1, size do
+        local pos = i - size/2
+        table.insert(sample, getSample(pos) * window[i] * 1000)
+    end
+    return sample
+end
+
+-- this function is ported from:
+--   http://www.kurims.kyoto-u.ac.jp/~ooura/fftman/ftmn1_24.html#sec1_2_4
+-- base code is from:
+--   http://game11.2ch.net/test/read.cgi/gameama/1182042852/420
+function fft(n, ar, ai)
+    local m, mq, i, j, j1, j2, j3, k=0,0,0,0,0,0,0,0
+    local theta, w1r, w1i, w3r, w3i=0,0,0,0,0
+    local x0r, x0i, x1r, x1i, x3r, x3i=0,0,0,0,0,0
+    local atan = math.atan
+    local cos = math.cos
+    local sin = math.sin
+    local floor = math.floor
+    
+    theta = -8 * atan(1.0) / n
+    m = n
+    while m > 2 do -- for (m = n; m > 2; m >>= 1)
+        mq = floor(m/4) -- mq = m >> 2;
+        i = 0
+        while i < mq do -- for (i = 0; i < mq; i++) {
+            w1r = cos(theta * i)
+            w1i = sin(theta * i)
+            w3r = cos(theta * 3 * i)
+            w3i = sin(theta * 3 * i)
+            k = m
+            while k<=n do -- for (k = m; k <= n; k <<= 2) {
+                j = k - m + i
+                while j < n do -- for (j = k - m + i; j < n; j += 2 * k) {
+                    j1 = j + mq
+                    j2 = j1 + mq
+                    j3 = j2 + mq
+                    x1r = ar[j] - ar[j2]
+                    x1i = ai[j] - ai[j2]
+                    ar[j] = ar[j] + ar[j2]
+                    ai[j] = ai[j] + ai[j2]
+                    x3r = ar[j3] - ar[j1]
+                    x3i = ai[j3] - ai[j1]
+                    ar[j1] = ar[j1] + ar[j3]
+                    ai[j1] = ai[j1] + ai[j3]
+                    x0r = x1r - x3i
+                    x0i = x1i + x3r
+                    ar[j2] = w1r * x0r - w1i * x0i
+                    ai[j2] = w1r * x0i + w1i * x0r
+                    x0r = x1r + x3i
+                    x0i = x1i - x3r
+                    ar[j3] = w3r * x0r - w3i * x0i
+                    ai[j3] = w3r * x0i + w3i * x0r
+                    j = j + (2*k)
+                end
+                k = k * 4
+            end
+            i=i+1
+        end
+        theta =theta * 2
+        m = floor(m/2)
+    end
+
+    k = 2
+    while k<=n do -- for (k = 2; k <= n; k <<= 2) {
+        j = k - 2
+        while j < n do -- for (j = k - 2; j < n; j += 2 * k) {
+            x0r = ar[j] - ar[j + 1]
+            x0i = ai[j] - ai[j + 1]
+            ar[j] =ar[j]+ar[j + 1]
+            ai[j] =ai[j]+ai[j + 1]
+            ar[j + 1] = x0r
+            ai[j + 1] = x0i
+            j = j+(k*2)
+        end
+        k = k * 4
+    end
+
+    i = 0
+    j = 1
+    while j < n - 1 do -- for (j = 1; j < n - 1; j++) {
+        k = floor(n/2)
+        i=bit.bxor(i,k)
+        while k > i do -- for (k = n >> 1; k > (i ^= k); k >>= 1);
+            k = floor(k/2)
+            i=bit.bxor(i,k)
+        end
+        if j < i then
+            x0r = ar[j]
+            x0i = ai[j]
+            ar[j] = ar[i]
+            ai[j] = ai[i]
+            ar[i] = x0r
+            ai[i] = x0i
+        end
+        j=j+1
+    end
 end
 
 -- beat detection (not mine)
@@ -195,7 +348,7 @@ function bdAudioProcess(song)
     for i = 1, length/1024-1 do
         if (energy_peak[i+1] == 1) then
             local di = i-i_prec
-            if di > 5 then
+            if di > 4 then -- henry: originally 5, playing around
                 table.insert(T, di)
                 i_prec = i
             end

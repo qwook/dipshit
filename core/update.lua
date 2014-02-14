@@ -20,12 +20,16 @@ seizure = 0
 
 function love.update(dt)
 
-    local smpl, beatline, tempo = getSample()
+    local smpl, beatline, tempo = getBeat()
     if smpl == 1 then
         seizure = 1
     else
         seizure = math.approach2(seizure, 0, (3+knob)*dt)
     end
+
+    -- seizure = getPitch() / 500
+    -- print(string.rep("|", math.floor(getPitch() / 10)))
+    -- print(getPitch())
 
     if love.keyboard.isDown("9") then
         knob = knob - 1

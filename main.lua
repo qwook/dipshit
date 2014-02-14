@@ -26,7 +26,7 @@ Timer =         require("entities.timer")
 MisterF =       require("entities.misterf")
 Goomba =        require("entities.core.goomba")
 Gorilla =       require("entities.npc.gorilla")
-SlimeGIrl =     require("entities.npc.slimegirl")
+SlimeGirl =     require("entities.npc.slimegirl")
 
 PhysBox =       require("entities.physbox")
 Button =        require("entities.button")
