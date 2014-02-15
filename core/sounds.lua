@@ -141,8 +141,7 @@ function getBeat()
         peak = 1
     end
 
-    return peak,
-        curBeat[2][s] or 0
+    return peak--, curBeat[2][s] or 0
 end
 
 -- pitch detection (not mine)
@@ -340,6 +339,11 @@ function bdAudioProcess(song)
             energy_peak[i+1] = 1
         end
     end
+
+    if true then
+        return energy_peak, beat
+    end
+
 
     -- calculate the BPMs
     ---------------------

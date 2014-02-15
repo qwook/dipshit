@@ -254,7 +254,7 @@ function reset()
         changeMap(arg[2])
     else
         if not map then
-            changeMap("title")
+            changeMap("test")
         else
             changeMap(map.mapname, true)
         end
