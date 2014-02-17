@@ -31,7 +31,7 @@ local oprint = print
 function print(...)
     textbox:SetText(textbox:GetText() .. "\n\n")
     for k, v in pairs({...}) do
-        textbox:SetText(textbox:GetText() .. v .. "\t")
+        textbox:SetText(textbox:GetText() .. tostring(v) .. "\t")
     end
     oprint(...)
 end

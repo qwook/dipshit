@@ -14,7 +14,8 @@ require("libs.loveframes")
 -- is the same thing as running this line:
 -- arguments["map"] = "blahblah"
 
-local arguments = {}
+arguments = {}
+
 local last = nil
 for k, v in pairs(arg) do
     if v:sub(1, 1) == "-" then
@@ -32,6 +33,7 @@ end
 statemanager = require("statemanager")
 console = require("console")
 input = require("input")
+entityfactory = require("entityfactory")
 
 -- todo: put these in JSON format
 
@@ -62,24 +64,7 @@ console:addConCommand("quit", function()
 end)
 
 -------------------------------------------
--- Temporary entity factory
-
-entityMap = {}
-
-function reloadEntities()
-    local ents = love.filesystem.getDirectoryItems("entities")
-    for k, v in pairs(ents) do
-        local basename = v:match("(.+)%.lua")
-        if basename then
-            entityMap[basename] = reload("entities." .. basename)
-            print("Loaded: " .. basename)
-        end
-    end
-end
-
-function reloadEntity(entname)
-    entityMap[basename] = reload("entities." .. entname)
-end
+-- File watching
 
 if arguments["watch"] then
     require("filewatcher")
@@ -88,19 +73,22 @@ if arguments["watch"] then
         if action == 3 then
             local basename = file:match("(.+)%.lua")
             if basename then
-                entityMap[basename] = reload("entities." .. basename)
+                entityfactory.entityMap[basename] = reload("entities." .. basename)
                 print("Reloaded: " .. basename)
             end
         end
     end)
+
+    filewatcher.watch("gamemodes", function(dir, file, action)
+        if action == 3 then
+            local basename = file:match("(.+)%.lua")
+            if basename then
+                reload("gamemodes." .. basename)
+                print("Reloaded Gamemode: " .. basename)
+            end
+        end
+    end)
 end
-
-console:addConCommand("reload_ents", function()
-    reloadEntities()
-end)
-
-reloadEntities()
-
 
 -------------------------------------------
 -- Love2d callbacks should be kept here

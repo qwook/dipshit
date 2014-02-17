@@ -1,46 +1,61 @@
 
-local Entity = class("BaseEntity")
+local GameMode = class("BaseGM")
 
 -- the initialize function needs to follow a strict rule
 -- of only initializing instance variables
 -- calling functions inside here will possibily break it
-function Entity:initialize()
-    self.x = 0
-    self.y = 0
-    self.w = 20
-    self.h = 20
+function GameMode:initialize()
 end
 
-function Entity:setPos(x, y)
-    self.x = x
-    self.y = y
+function GameMode:exit()
 end
 
-function Entity:getPos()
-    return self.x, self.y
+function GameMode:update(dt)
 end
 
-function Entity:setSize(w, h)
-    self.w = w
-    self.h = h
+function GameMode:draw()
 end
 
-function Entity:getSize()
-    return self.w, self.h
+function GameMode:postDraw()
+    -- draw health and shit here
 end
 
-function Entity:draw()
-    love.graphics.setColor(100, 200, 150)
-    love.graphics.rectangle("fill",
-        self.x, self.y,
-        self.w, self.h)
+function GameMode:onKeyPressed(key)
+end
+
+function GameMode:onKeyReleased(key)
+end
+
+-- todo:
+
+function GameMode:calcView()
+    -- returns x, y, scale of camera position
+    return 0, 0, 1
+end
+
+function GameMode:onPlayerSpawn(player)
+end
+
+function GameMode:onPlayerDeath(player)
+end
+
+function GameMode:onPlayerKeyPressed(player, key)
+end
+
+function GameMode:onPlayerKeyReleased(player, key)
+end
+
+function GameMode:onMousePressed(x, y, button)
+end
+
+function GameMode:onMouseReleased(x, y, button)
 end
 
 -- this adds a bit of overhead
 -- but checks for newly created instance variables
 -- and deleted variables
 if arguments["watch"] then
-    function Entity:__index(index)
+    function GameMode:__index(index)
         local class = getmetatable(self)
 
         local obj = {}
@@ -67,4 +82,4 @@ if arguments["watch"] then
     end
 end
 
-return Entity
+return GameMode

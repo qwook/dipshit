@@ -29,7 +29,8 @@ local convarMap = {}
 function Console:addConVar(convar, default, type)
     convarMap[convar] = {value = default, default = default, type = type}
     self:addConCommand(convar, function(cmd, args)
-        if type(args[1]) ~= convarMap[cmd].type then
+        -- if type(args[1]) ~= convarMap[cmd].type then
+        if args[1] == nil then
             print(cmd .. ": " .. convarMap[cmd].value .. " default: " .. convarMap[cmd].default)
         end
         convarMap[cmd].value = args[1]
@@ -37,6 +38,11 @@ function Console:addConVar(convar, default, type)
 end
 
 function Console:getConVar(convar)
+    if convarMap[convar].type == "boolean" then
+        return convarMap[convar].value == "true" or convarMap[convar].value == "1"
+    elseif convarMap[convar].type == "number" then
+        return tonumber(convarMap[convar].value)
+    end
     return convarMap[convar].value
 end
 
