@@ -24,6 +24,9 @@ function MenuState:draw(dt)
 end
 
 function MenuState:keypressed(key, isrepeat)
+    if key == "escape" then
+        statemanager:push("pause")
+    end
 end
 
 return MenuState

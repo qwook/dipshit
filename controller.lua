@@ -1,4 +1,11 @@
 
+------------------------------------------------------------
+-- Players and things that need key/mouse/joy input
+-- derive off of this.
+--
+-- The menustate actually uses one of these to start
+-- the game.
+
 local Controller = class("Controller")
 
 function Controller:initialize()

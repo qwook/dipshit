@@ -1,5 +1,5 @@
 
-class = require("libs.middleclass")
+require("libs.hotclass") -- allows for hot-swappable classes
 
 require("libs.mathext") -- this extends the math library
 require("libs.tableext") -- this extends the table library
@@ -8,6 +8,11 @@ require("libs.loveframes")
 
 -------------------------------------------
 -- Commandline argument parsing
+--
+-- ex:
+-- love . -map blahblah
+-- is the same thing as running this line:
+-- arguments["map"] = "blahblah"
 
 local arguments = {}
 local last = nil
@@ -22,10 +27,13 @@ for k, v in pairs(arg) do
 end
 
 -------------------------------------------
+-- Initiate global classes
 
 statemanager = require("statemanager")
 console = require("console")
 input = require("input")
+
+-- todo: put these in JSON format
 
 input:bind("key_g", "+attack1")
 input:bind("key_h", "+jump1")
@@ -40,6 +48,59 @@ input:bind("key_left", "+left2")
 input:bind("key_right", "+right2")
 input:bind("key_up", "+lookup2")
 input:bind("key_down", "+lookdown2")
+
+-------------------------------------------
+-- Console commands for exiting to menu
+-- and for quitting the game
+
+console:addConCommand("exit", function()
+    statemanager:setState("menu")
+end)
+
+console:addConCommand("quit", function()
+    love.event.quit()
+end)
+
+-------------------------------------------
+-- Temporary entity factory
+
+entityMap = {}
+
+function reloadEntities()
+    local ents = love.filesystem.getDirectoryItems("entities")
+    for k, v in pairs(ents) do
+        local basename = v:match("(.+)%.lua")
+        if basename then
+            entityMap[basename] = reload("entities." .. basename)
+            print("Loaded: " .. basename)
+        end
+    end
+end
+
+function reloadEntity(entname)
+    entityMap[basename] = reload("entities." .. entname)
+end
+
+if arguments["watch"] then
+    require("filewatcher")
+
+    filewatcher.watch("entities", function(dir, file, action)
+        if action == 3 then
+            local basename = file:match("(.+)%.lua")
+            if basename then
+                entityMap[basename] = reload("entities." .. basename)
+                print("Reloaded: " .. basename)
+            end
+        end
+    end)
+end
+
+console:addConCommand("reload_ents", function()
+    reloadEntities()
+end)
+
+reloadEntities()
+
 
 -------------------------------------------
 -- Love2d callbacks should be kept here
@@ -57,6 +118,11 @@ function love.load()
 end
 
 function love.update(dt)
+    -- update filewatcher
+    if filewatcher then
+        filewatcher.update()
+    end
+
     -- update controllers
     for k, v in pairs(statemanager:getState():getControllers()) do
         v:update(dt)

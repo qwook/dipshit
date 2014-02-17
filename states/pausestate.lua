@@ -24,6 +24,18 @@ textinput.OnEnter = function(self, text)
     console:runString(text)
 end
 
+-- overwrite the print function
+-- capture all prints inside the ingame console box
+
+local oprint = print
+function print(...)
+    textbox:SetText(textbox:GetText() .. "\n\n")
+    for k, v in pairs({...}) do
+        textbox:SetText(textbox:GetText() .. v .. "\t")
+    end
+    oprint(...)
+end
+
 function PauseState:initialize()
     textinput:SetFocus(true)
 end
@@ -44,8 +56,6 @@ end
 function PauseState:keypressed(key, isrepeat)
     if key == "escape" then
         statemanager:pop()
-    elseif key == "q" then
-        -- statemanager:setState("menu")
     end
 end
 
