@@ -64,4 +64,4 @@ function StateManager:keyreleased(key)
     self.states[#self.states]:keyreleased(key)
 end
 
-return StateManager
+return StateManager:new()

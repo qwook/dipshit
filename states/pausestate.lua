@@ -2,29 +2,29 @@
 local BaseState = require("states.basestate")
 local PauseState = class("PauseState", BaseState)
 
-console = loveframes.Create("frame")
-console:SetName("Console")
-console:SetState("pause")
-console:SetPos(10, 10)
-console:SetSize(400, 400)
-console:ShowCloseButton(false)
+consoleframe = loveframes.Create("frame")
+consoleframe:SetName("Console")
+consoleframe:SetState("pause")
+consoleframe:SetPos(10, 10)
+consoleframe:SetSize(400, 400)
+consoleframe:ShowCloseButton(false)
 
-local textbox = loveframes.Create("textinput", console)
+local textbox = loveframes.Create("textinput", consoleframe)
 textbox:SetPos(5, 5 + 24)
 textbox:SetSize(400-10, 400-24-5-5-5-26)
 textbox:SetEditable(false)
 textbox:SetMultiline(true)
 
-local textinput = loveframes.Create("textinput", console)
+local textinput = loveframes.Create("textinput", consoleframe)
 textinput:SetPos(5, 400-26-5)
 textinput:SetSize(400-10, 26)
 textinput.OnEnter = function(self, text)
     self:SetText("")
     textbox:SetText(textbox:GetText() .. "\n> " .. text)
+    console:runString(text)
 end
 
 function PauseState:initialize()
-    console:SetVisible(true)
     textinput:SetFocus(true)
 end
 
