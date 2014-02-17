@@ -30,7 +30,7 @@ function Entity:getSize()
 end
 
 function Entity:draw()
-    love.graphics.setColor(100, 200, 150)
+    love.graphics.setColor(200, 255, 150)
     love.graphics.rectangle("fill",
         self.x, self.y,
         self.w, self.h)

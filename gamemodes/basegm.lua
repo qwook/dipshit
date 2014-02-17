@@ -26,6 +26,10 @@ end
 function GameMode:onKeyReleased(key)
 end
 
+function GameMode:getControllers()
+    return {}
+end
+
 -- todo:
 
 function GameMode:calcView()

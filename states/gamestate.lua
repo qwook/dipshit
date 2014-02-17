@@ -66,4 +66,14 @@ function GameState:keyreleased(key)
     end
 end
 
+function GameState:getControllers(key)
+    local success, err = pcall(self.gamemode.getControllers, self.gamemode, key)
+    if not success then
+        print(err)
+        return {}
+    else
+        return err
+    end
+end
+
 return GameState
