@@ -1,4 +1,9 @@
 
+-------------------------------------------------------
+-- Define input keys
+-- This is the only place you need to define them.
+-- The console command bindings will append the player number
+
 InputKeys = {
     ["attack"]    = bit.lshift(1, 1);
     ["left"]      = bit.lshift(1, 2);
@@ -9,31 +14,46 @@ InputKeys = {
 }
 
 -------------------------------------------------------
+-- Internal function so that input keys can be
+-- invoked by the console.
 
 local inputKeyMap = {}
 local function addInputKey(playerId, command, inputkey)
     console:addConCommand("+" .. command, function()
-        print( "down", playerId, inputkey )
+        local controllers = statemanager:getState():getControllers()
+        local controller = controllers[playerId] or controllers[1]
+        if controller then
+            controller:inputPressed(inputkey)
+        end
     end)
     console:addConCommand("-" .. command, function()
-        print( "up", playerId, inputkey )
+        local controllers = statemanager:getState():getControllers()
+        local controller = controllers[playerId] or controllers[1]
+        if controller then
+            controller:inputReleased(inputkey)
+        end
     end)
 end
 
 -------------------------------------------------------
+-- Bind input keys
 
 -- do this for 2 players.. or more??? heheheHEHehEHHEh
 for playerId = 1, 2 do
     -- add input key as console command
-    addInputKey(playerId, "attack" .. playerId,     "attack")
-    addInputKey(playerId, "left" .. playerId,       "left")
-    addInputKey(playerId, "right" .. playerId,      "right")
-    addInputKey(playerId, "lookup" .. playerId,     "lookup")
-    addInputKey(playerId, "lookdown" .. playerId,   "lookdown")
-    addInputKey(playerId, "jump" .. playerId,       "jump")
+    for inputKey, val in pairs(InputKeys) do
+        -- we do da loop da loop through the InputKeys
+        -- then we append the player number to the InputKey
+        -- a boom bam bip boom bop
+        addInputKey(playerId, inputKey .. playerId, inputKey)
+    end
 end
 
 -------------------------------------------------------
+-- CAN YOU FEEL THE SUNSHINE
+-- DOES IT BRIGHTEN UP YOUR DAY?
+-- DO YOU FEEL THAT SOME TIMES
+-- YOU JUST HAVE TO GET AWAYYYY??
 
 local Input = class("Input")
 local bindsMap = {}
@@ -77,6 +97,7 @@ end
 
 local input = Input:new()
 
+-- lets you bind keys through the console
 console:addConCommand("bind", function(cmd, args)
     input:bind(args[1], args[2])
 end)

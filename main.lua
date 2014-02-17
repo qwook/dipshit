@@ -6,6 +6,9 @@ require("libs.tableext") -- this extends the table library
 require("libs.print2") -- this adds "print2"
 require("libs.loveframes")
 
+-------------------------------------------
+-- Commandline argument parsing
+
 local arguments = {}
 local last = nil
 for k, v in pairs(arg) do
@@ -17,6 +20,8 @@ for k, v in pairs(arg) do
         last = nil
     end
 end
+
+-------------------------------------------
 
 statemanager = require("statemanager")
 console = require("console")
@@ -36,6 +41,10 @@ input:bind("key_right", "+right2")
 input:bind("key_up", "+lookup2")
 input:bind("key_down", "+lookdown2")
 
+-------------------------------------------
+-- Love2d callbacks should be kept here
+-- for organization.
+
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.graphics.setBackgroundColor(134, 200, 255)
@@ -48,6 +57,11 @@ function love.load()
 end
 
 function love.update(dt)
+    -- update controllers
+    for k, v in pairs(statemanager:getState():getControllers()) do
+        v:update(dt)
+    end
+
     statemanager:update(dt)
     loveframes.update(dt)
 end

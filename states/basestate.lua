@@ -22,4 +22,8 @@ end
 function BaseState:textinput(unicode)
 end
 
+function BaseState:getControllers()
+    return self.controllers or {}
+end
+
 return BaseState
