@@ -32,3 +32,8 @@ Holds individual objects belonging to each chunk of the map, including npcs.
 
 # World
 Only one world belonging to the cosmos. Handles the physics and refers to the physics engine world.
+
+#Interfaces
+-- Input
+-- Timer
+
