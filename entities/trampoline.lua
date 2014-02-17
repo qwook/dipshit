@@ -64,7 +64,7 @@ function Trampoline:touchedPlayer(player)
 
     -- wait 0.12 seconds, then shoot the player
     -- using a javascript style timer :V
-    setTimeout(function()
+    timer:setTimeout(function()
         -- no goal set
         if not self:getProperty("goal") then return end
 
@@ -145,7 +145,7 @@ function Trampoline:draw()
 end
 
 function Trampoline:beginContact(other, contact, isother)
-    onNextUpdate(function()
+    timer:onNextUpdate(function()
         if other.type == "PLAYER" then
             self:touchedPlayer(other)
         end

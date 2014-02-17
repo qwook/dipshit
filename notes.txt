@@ -18,3 +18,17 @@ should extend. Should make them derive common class.
     some Tiled properties.
     - We could build a foundation on STI, but later on
     we should not have to depend on it.
+
+notes:
+======
+
+# Cosmos
+Holder of everything, and of the maps.
+TODO: Create a "cosmos" handler.
+
+# Map
+A chunk of the "cosmos"
+Holds individual objects belonging to each chunk of the map, including npcs.
+
+# World
+Only one world belonging to the cosmos. Handles the physics and refers to the physics engine world.

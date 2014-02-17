@@ -1,56 +1,17 @@
 
-knob = 0
-
-local updateList = {}
-function onNextUpdate(cb)
-    table.insert(updateList, cb)
-end
-
-local timeouts = {}
-function setTimeout(cb, delay)
-    table.insert(timeouts, {cb = cb, delay = love.timer.getTime() + delay})
-end
-
-function clearUpdates()
-    table.clear(timeouts)
-    table.clear(updateList)
-end
-
 seizure = 0
 
 function love.update(dt)
 
+    timer:update(dt)
+
+    -- sets the "seizure" variable, which is created by beat detection
     local smpl, beatline, tempo = getBeat()
     if smpl == 1 then
         seizure = 1
     else
-        seizure = math.approach2(seizure, 0, (3+knob)*dt)
+        seizure = math.approach2(seizure, 0, 3*dt)
     end
-
-    -- seizure = getPitch() / 500
-    -- print(string.rep("|", math.floor(getPitch() / 10)))
-    -- print(getPitch())
-
-    if love.keyboard.isDown("9") then
-        knob = knob - 1
-        print(knob)
-    end
-
-    if love.keyboard.isDown("0") then
-        knob = knob + 1
-        print(knob)
-    end
-
-    local tmp = {}
-    for k,v in pairs(timeouts) do
-        if (love.timer.getTime() > v.delay) then
-            v.cb()
-        else
-            table.insert(tmp, v)
-        end
-    end
-    table.clear(timeouts)
-    table.copyto(tmp, timeouts)
 
     -- update joystick axes detection
     -- its stupid we can do better
@@ -84,18 +45,6 @@ function love.update(dt)
 
     world:update(dt)
 
-    if changeMapTime > 0 then
-        changeMapTime = changeMapTime - dt
-    elseif changeMapQueue ~= nil then
-        changeMapTimeOut = 1
-        changeMap(changeMapQueue)
-        changeMapQueue = nil
-    end
-
-    if changeMapTimeOut > 0 then
-        changeMapTimeOut = changeMapTimeOut - dt
-    end
-
     for k, map in pairs(maps) do
         for i, object in pairs(map.objects) do
             map = object.map or map
@@ -108,11 +57,6 @@ function love.update(dt)
         object:update(dt)
     end
 
-    while (#updateList > 0) do
-        updateList[1]()
-        table.remove(updateList, 1)
-    end
-
     if shouldExtend() then
         extendMap()
     end
@@ -120,7 +64,7 @@ function love.update(dt)
     if shouldTruncate() then
         truncateMap()
     end
-end
 
-function updateJoystickDetection()
+    loveframes.update(dt)
+
 end

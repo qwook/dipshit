@@ -2,6 +2,7 @@
 require("libs.mathext") -- this extends the math library
 require("libs.tableext") -- this extends the table library
 require("libs.print2") -- this adds "print2"
+require("libs.loveframes")
 
 GRAVITY =       1000
 
@@ -9,11 +10,13 @@ class =         require("libs.middleclass")
 
 require("core.update")
 require("core.draw")
-require("core.sounds")
+require("core.sound")
+require("core.music")
 require("core.cache")
 
 Input =         require("core.input")
 Events =        require("core.events")
+Timer =         require("core.timer")
 
 Player =        require("entities.core.player")
 Map =           require("entities.core.map")
@@ -22,7 +25,6 @@ Camera =        require("entities.camera")
 RushCamera =    require("entities.rushcamera")
 TitleScreen =   require("entities.core.titlescreen")
 Text =          require("entities.text")
-Timer =         require("entities.timer")
 MisterF =       require("entities.misterf")
 Goomba =        require("entities.core.goomba")
 Gorilla =       require("entities.npc.gorilla")
@@ -64,15 +66,6 @@ pausing = false
 
 ----------------------------------------------------
 
-
--- replace with tiled later
-local tempmap = {
-    {1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0};
-    {1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0};
-    {1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0};
-    {1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0};
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0};
-}
 
 function beginContact(fixture1, fixture2, contact)
     local physical1 = fixture1:getUserData()
@@ -191,7 +184,7 @@ function changeMap(mapname, dontappend)
     collisionSwapped = false
     singleCamera = false
 
-    clearUpdates()
+    timer:clearUpdates()
 
     if dontappend then
         map = Map:new(mapname)
@@ -207,7 +200,7 @@ function changeMap(mapname, dontappend)
     extendMap()
 
     -- playMusic("Splash_Woman_Hip-Hop_Remix.ogg", 1)
-    playMusic("Anamanaguchi_-_Endless_Fantasy.ogg", 1)
+    -- playMusic("Anamanaguchi_-_Endless_Fantasy.ogg", 1)
 end
 
 function extendMap()
@@ -263,7 +256,7 @@ end
 
 function love.load()
 
-    love.mouse.setVisible(false)
+    -- love.mouse.setVisible(false)
 
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.graphics.setBackgroundColor(134, 200, 255)
@@ -274,8 +267,11 @@ function love.load()
 
     splitFramebuffer = love.graphics.newCanvas()
 
+    -- interfaces
     input = Input:new()
     input2 = Input:new()
+    timer = Timer:new()
+
     if arg[2] == "dvorak" then
         keyBoardLayout = "dvorak"
     end
@@ -283,5 +279,14 @@ function love.load()
 
     events = Events:new()
     reset()
+
+    local frame = loveframes.Create("frame")
+    frame:SetName("Mainmenu Frame")
+    frame:Center()
+    frame:SetSize(110, 150)
+
+    local text = loveframes.Create("textinput", frame)
+    text:SetPos(5, 5)
+    text:SetSize(100, 100)
 
 end

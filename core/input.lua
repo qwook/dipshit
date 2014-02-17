@@ -167,6 +167,13 @@ function love.keypressed(key, isrepeat)
         input:eventKeyPressed(key)
         input2:eventKeyPressed(key)
     end
+
+
+    loveframes.keypressed(key)
+end
+
+function love.textinput(unicode)
+    loveframes.textinput(unicode)
 end
 
 function love.keyreleased(key)
@@ -177,6 +184,8 @@ function love.keyreleased(key)
 
     input:eventKeyReleased(key)
     input2:eventKeyReleased(key)
+
+    loveframes.keyreleased(key)
 end
 
 function love.joystickpressed( joystick, button )
@@ -197,6 +206,14 @@ function love.joystickreleased( joystick, button )
 
     input:eventJoyReleased(joystick:getID() .. "_" .. button)
     input2:eventJoyReleased(joystick:getID() .. "_" .. button)
+end
+
+function love.mousepressed(x, y, button)
+    loveframes.mousepressed(x, y, button)
+end
+
+function love.mousereleased(x, y, button)
+    loveframes.mousereleased(x, y, button)
 end
 
 lastAxes = {}

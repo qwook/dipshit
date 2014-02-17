@@ -38,7 +38,7 @@ end
 
 function Trigger:beginContact(other, contact, isother)
     table.insert( self.touching, other )
-    onNextUpdate(function()
+    timer:onNextUpdate(function()
         local filter = self:getProperty("filter")
         if (filter and filter == other.name) or (not filter and other.type == "PLAYER") then
             self:trigger("ontrigger", other)

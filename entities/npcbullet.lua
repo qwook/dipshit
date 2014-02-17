@@ -44,7 +44,7 @@ function NPCBullet:beginContact(other, contact, isother)
     local nx, ny = contact:getNormal()
     local x, y = contact:getPositions()
 
-    onNextUpdate(function()
+    timer:onNextUpdate(function()
         if other.inflictDamage then
             local blood = Blood:new()
             blood:setPosition(x - nx*5, y - ny*5)

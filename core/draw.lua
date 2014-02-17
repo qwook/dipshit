@@ -22,7 +22,7 @@ local bg_poop = loadImage("sprites/fk_1.gif")
 local bg_buildings = loadImage("sprites/fk_2.gif")
 local bg_trees = loadImage("sprites/fk_3.gif")
 seizure = 0
-function drawBackground(w, h, offw, offh)
+local function drawBackground(w, h, offw, offh)
 
     love.graphics.push()
     love.graphics.scale(4, 4)
@@ -265,7 +265,8 @@ local function drawSplitScreen()
 
 end
 
-function drawFontKerned(string, x, y, xoff)
+-- why is this function here??? D;
+local function drawFontKerned(string, x, y, xoff)
     -- go through every character and print it
     tostring(string):gsub(".", function(a)
         love.graphics.print(a, x, y)
@@ -282,16 +283,6 @@ function love.draw()
         drawSplitScreen()
     else
         drawSingleScreen()
-    end
-
-    if changeMapTime > 0 then
-        love.graphics.setColor(255, 255, 255, (1 - changeMapTime)*255)
-        love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-    end
-
-    if changeMapTimeOut > 0 then
-        love.graphics.setColor(255, 255, 255, changeMapTimeOut*255)
-        love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
     end
 
     if pausing then
@@ -324,27 +315,6 @@ function love.draw()
         drawFontKerned(player2:getRespawnTime(), love.graphics.getWidth() - 250, 60, -8)
     end
 
-    -- if player.lastDamaged > 0 and player:isAlive() then
-    --     love.graphics.setColor(255, 0, 0, (player.lastDamaged/0.05) * 100)
-    --     love.graphics.rectangle('fill', 0, 0, 100, love.graphics.getHeight())
-    -- end
-
-    -- if player2.lastDamaged > 0 and player2:isAlive() then
-    --     love.graphics.setColor(255, 0, 0, (player2.lastDamaged/0.05) * 100)
-    --     love.graphics.rectangle('fill', love.graphics.getWidth()-100, 0, 100, love.graphics.getHeight())
-    -- end
-
-    -- local points = {}
-    -- for i = 0, 100 do
-    --     if getSample(i) ~= nil then
-    --         table.insert(points, i*5 + 50)
-    --         table.insert(points, getSample(i)*100 + 100)
-    --     end
-    -- end
-
-    -- if #points > 2 then
-    --     love.graphics.setColor(0, 255, 0)
-    --     love.graphics.line(points)
-    -- end
+    loveframes.draw()
 
 end
