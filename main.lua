@@ -6,6 +6,10 @@ require("libs.tableext") -- this extends the table library
 require("libs.print2") -- this adds "print2"
 require("libs.loveframes")
 
+SpriteSheet = require("util.spritesheet")
+
+require("core.cache")
+
 -------------------------------------------
 -- Commandline argument parsing
 --
@@ -37,8 +41,8 @@ entityfactory = require("entityfactory")
 
 -- todo: put these in JSON format
 
-input:bind("key_g", "+attack1")
-input:bind("key_h", "+jump1")
+input:bind("key_f", "+attack1")
+input:bind("key_g", "+jump1")
 input:bind("key_a", "+left1")
 input:bind("key_d", "+right1")
 input:bind("key_w", "+lookup1")

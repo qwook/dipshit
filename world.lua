@@ -131,9 +131,21 @@ function World:drawEntity(ent)
     love.graphics.pop()
 end
 
+function World:postDrawEntity(ent)
+    love.graphics.push()
+    love.graphics.translate(ent:getPos())
+    love.graphics.rotate(ent:getAngle())
+    ent:postDraw()
+    love.graphics.pop()
+end
+
 function World:draw()
     for k, ent in pairs(self.children) do
         self:drawEntity(ent)
+    end
+
+    for k, ent in pairs(self.children) do
+        self:postDrawEntity(ent)
     end
 end
 

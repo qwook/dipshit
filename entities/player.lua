@@ -1,8 +1,8 @@
 
-
 local PhysEntity = reload("entities.physentity")
 local Controller = reload("controller")
 local Entity = class("Player", PhysEntity, Controller)
+Entity.spritesheet = SpriteSheet:new("sprites/dude.png", 32, 32)
 
 Entity.phystype = "dynamic"
 Entity.density = 1
@@ -32,11 +32,29 @@ function Entity:spawn(context)
 
     self.jumpTimer = 0
     self.shortJumpTimer = 0
+
+    self.noclip = false
+    self.facing = 1
+end
+
+function Entity:setNoClip(bool)
+    self.noclip = bool
+
+    if bool == true then
+        self:setGravityScale(0)
+    else
+        self:setGravityScale(1)
+    end
+end
+
+function Entity:isNoClipped()
+    return self.noclip
 end
 
 function Entity:draw()
+    love.graphics.scale(2)
     love.graphics.setColor(255, 255, 255)
-    love.graphics.rectangle("fill", -self.w/2, -self.h/2, self.w, self.h)
+    self.spritesheet:draw(8, 0, -self.facing*12, -19, 0, self.facing, 1)
 end
 
 function Entity:update(dt)
@@ -75,14 +93,18 @@ function Entity:handleMovement(dt)
             if velx < 200 then
                 self:applyForce(500, 0)
             end
+            self.facing = 1
         elseif self:isKeyDown("left") then
             if velx > -200 then
                 self:applyForce(-500, 0)
             end
+            self.facing = -1
         end
 
         if self:isKeyDown("jump") and self.jumpTimer <= 0 then
-            self:applyLinearImpulse(0, -40)
+            -- when you jump, push us back a bit
+            -- and apply the vertical impulse
+            self:applyLinearImpulse(-velx*0.05, -40)
             self.jumpTimer = 0.5
             self.shortJumpTimer = 0.075
         end
@@ -92,12 +114,15 @@ function Entity:handleMovement(dt)
             if velx < 200 then
                 self:applyForce(250, 0)
             end
+            self.facing = 1
         elseif self:isKeyDown("left") then
             if velx > -200 then
                 self:applyForce(-250, 0)
             end
+            self.facing = -1
+        elseif self.noclip then
+            self:applyForce(-velx, -vely)
         end
-
 
         -- we just jumped, allow for a longer jump
         if self.shortJumpTimer > 0 and self:isKeyDown("jump") then
@@ -108,7 +133,26 @@ function Entity:handleMovement(dt)
             self.shortJumpTimer = 0
         end
     end
+
+    if self.noclip then
+        if self:isKeyDown("lookup") then
+            if vely > -200 then
+                self:applyForce(0, -250)
+            end
+        elseif self:isKeyDown("lookdown") then
+            if vely < 200 then
+                self:applyForce(0, 250)
+            end
+        end
+    end
+
 end
+
+console:addConCommand("noclip", function()
+    for k, pl in pairs(world:getPlayers()) do
+        pl:setNoClip(not pl.noclip)
+    end
+end)
 
 return Entity
 

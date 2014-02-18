@@ -50,7 +50,14 @@ function Entity:draw()
         self.w, self.h)
 end
 
+function Entity:postDraw()
+end
+
 function Entity:update(dt)
+end
+
+function Entity:isPlayer()
+    return false
 end
 
 -- this adds a bit of overhead

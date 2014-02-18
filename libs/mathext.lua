@@ -52,7 +52,12 @@ function math.approach2(start, _end, inc)
     return math.clamp(start + (dir * inc), start, _end)
 end
 
-function math.lerp(x1, y1, x2, y2, alpha)
+function math.lerp(x1, x2, alpha)
+    local dist = math.abs(x2 - x1)
+    return math.approach2(x1, x2, alpha * dist)
+end
+
+function math.lerpVector(x1, y1, x2, y2, alpha)
     local dist = math.distance(x1, y1, x2, y2)
     return math.approach2(x1, x2, alpha * dist), math.approach2(y1, y2, alpha * dist)
 end

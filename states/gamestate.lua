@@ -59,16 +59,37 @@ function GameState:getGamemode()
 end
 
 function GameState:draw(dt)
+    -- draw whatever the gamemode wants to draw
     local success, err = pcall(gamemode.draw, gamemode)
     if not success then
         print(err)
     end
 
+    love.graphics.push()
+
+    -- camera calculation
+    local success, x, y, scale = pcall(gamemode.calcView, gamemode)
+    if not success then
+        print(x)
+    else
+        -- center the camera and scale the coordinates
+        x = -x
+        y = -y
+        x = x*scale + love.graphics.getWidth()/2
+        y = y*scale + love.graphics.getHeight()/2
+        love.graphics.translate(x, y)
+        love.graphics.scale(scale)
+    end
+
+    -- draw the world and all the entities
     local success, err = pcall(world.draw, world)
     if not success then
         print(err)
     end
+
+    love.graphics.pop()
     
+    -- draw gamemode hud or whatever
     local success, err = pcall(gamemode.postDraw, gamemode)
     if not success then
         print(err)

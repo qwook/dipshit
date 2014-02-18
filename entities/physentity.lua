@@ -168,4 +168,19 @@ end
 function Entity:postSolve(other, contact, normal, tangent, isother)
 end
 
+function Entity:postDraw()
+
+    if self.shape and arguments["debug"] then
+        love.graphics.pop() -- hack
+        love.graphics.setColor(0, 255, 0, 100)
+        if self.shape:typeOf("PolygonShape") then
+            love.graphics.polygon("line", self.body:getWorldPoints( self.shape:getPoints() ))
+        elseif self.shape:typeOf("CircleShape") then
+            local x, y = self:getPosition()
+            love.graphics.circle("line", x, y, self.shape:getRadius())
+        end
+        love.graphics.push() -- hack
+    end
+end
+
 return Entity
