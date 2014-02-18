@@ -30,8 +30,8 @@ end
 -------------------------------------------
 -- Initiate global classes
 
-statemanager = require("statemanager")
 console = require("console")
+statemanager = require("statemanager")
 input = require("input")
 entityfactory = require("entityfactory")
 
@@ -50,6 +50,8 @@ input:bind("key_left", "+left2")
 input:bind("key_right", "+right2")
 input:bind("key_up", "+lookup2")
 input:bind("key_down", "+lookdown2")
+
+input:bind("key_r", "reload")
 
 -------------------------------------------
 -- Console commands for exiting to menu
@@ -113,7 +115,7 @@ function love.update(dt)
 
     -- update controllers
     for k, v in pairs(statemanager:getState():getControllers()) do
-        v:update(dt)
+        v:updateKeys(dt)
     end
 
     statemanager:update(dt)

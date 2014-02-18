@@ -19,8 +19,15 @@ function StateManager:getStateName()
 end
 
 function StateManager:setState(statename)
-    self:clear()
-    self:push(statename)
+    while #self.states > 0 and self.states[#self.states]._name ~= statename do
+        table.remove(self.states)
+    end
+
+    if #self.states == 0 then
+        self:push(statename)
+    end
+    
+    loveframes.SetState(statename)
 end
 
 function StateManager:clear()

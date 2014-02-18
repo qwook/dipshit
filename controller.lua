@@ -26,7 +26,7 @@ function Controller:inputReleased(inputKey)
     self._inputKeys = self._inputKeys - inputValue
 end
 
-function Controller:update(dt)
+function Controller:updateKeys(dt)
     self._lastInputKeys = self._inputKeys2
     self._inputKeys2 = self._inputKeys
 end

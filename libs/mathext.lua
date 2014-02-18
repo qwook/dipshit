@@ -15,6 +15,10 @@ function math.distance(x1, y1, x2, y2)
     return math.length(x1 - x2, y1 - y2)
 end
 
+function math.angle(x1, y1, x2, y2)
+    return math.acos( math.dotproduct(x1, y1, 0, x2, y2, 0) / (math.length(x1, y1) * math.length(x2, y2)) )
+end
+
 function math.normal(x, y)
     local len = math.length(x, y)
     return x / len, y / len
