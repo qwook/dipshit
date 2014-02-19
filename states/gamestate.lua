@@ -59,6 +59,8 @@ function GameState:getGamemode()
 end
 
 function GameState:draw(dt)
+    love.graphics.origin()
+
     -- draw whatever the gamemode wants to draw
     local success, err = pcall(gamemode.draw, gamemode)
     if not success then
