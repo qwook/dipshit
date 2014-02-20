@@ -60,35 +60,4 @@ function Entity:isPlayer()
     return false
 end
 
--- this adds a bit of overhead
--- but checks for newly created instance variables
--- and deleted variables
--- if arguments["watch"] then
---     function Entity:__index(index)
---         local class = getmetatable(self)
-
---         local obj = {}
---         local o = setmetatable(obj, class)
---         class.initialize(o)
-
---         for k, v in pairs(obj) do
---             if not rawget(self, k) then
---                 rawset(self, k, v)
---             end
---         end
-
---         for k, v in pairs(self) do
---             if not rawget(obj, k) then
---                 rawset(self, k, nil)
---             end
---         end
-
---         local ret = rawget(self, index) or class[index]
---         if not ret and class.super then
---             return class.super[index]
---         end
---         return ret
---     end
--- end
-
 return Entity

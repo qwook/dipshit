@@ -19,6 +19,12 @@ end
 function BaseState:keyreleased(key)
 end
 
+function BaseState:mousepressed(x, y, button)
+end
+
+function BaseState:mousereleased(x, y, button)
+end
+
 function BaseState:textinput(unicode)
 end
 

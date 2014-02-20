@@ -100,14 +100,8 @@ function World:getPlayers()
     return self.players
 end
 
-function World:update(dt)
-    -- remove the entities in the removal queue
-    for k, ent in pairs(self.removalQueue) do
-        table.removevalue(self.children, ent)
-    end
-    -- clear the removal queue
-    table.clear(self.removalQueue)
-
+function World:updateEntities(dt)
+    
     -- update global entities
     for k, ent in pairs(self.children) do
         ent:update(dt)
@@ -119,6 +113,16 @@ function World:update(dt)
             ent:update(dt)
         end
     end
+
+end
+
+function World:update(dt)
+    -- remove the entities in the removal queue
+    for k, ent in pairs(self.removalQueue) do
+        table.removevalue(self.children, ent)
+    end
+    -- clear the removal queue
+    table.clear(self.removalQueue)
 
     self.physWorld:update(dt)
 end

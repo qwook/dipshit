@@ -7,32 +7,11 @@ local GameMode = class("BaseGM")
 function GameMode:initialize()
     world:setGravity(0, 400)
 
-    local player = entityfactory:create("player")
-    player:setPos(50, 50)
-    player:spawn()
-
-    local player2 = entityfactory:create("player")
-    player2:setPos(50, 50)
-    player2:spawn()
-
-    for i = 1, 15 do
-        local ent = entityfactory:create("physentity")
-        ent:setPos(0+20*i, 20)
-        ent:spawn()
-
-        ent:setVelocity(100, 0)
-        ent:setTorque(math.random(-1, 1))
-    end
-
-    local tilemap = entityfactory:create("tilemap")
-    tilemap:setPos(300, 400)
-    tilemap:spawn()
-
     self.xCam = nil
     self.yCam = nil
     self.scaleCam = nil
 
-    self.magShake = 10
+    self.magShake = 0
     self.rShake = 0
     self.sShake = 0
 end
@@ -41,17 +20,20 @@ function GameMode:exit()
 end
 
 function GameMode:update(dt)
+    world:updateEntities(dt)
 end
 
-function GameMode:draw()
-    love.graphics.setColor(255, 0, 0)
-    love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.print("Game!", 0, 0)
+function GameMode:drawHUD()
+    -- love.graphics.setColor(255, 0, 0)
+    -- love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+    -- love.graphics.setColor(255, 255, 255)
+    -- love.graphics.print("Game!", 0, 0)
+end
+
+function GameMode:preDraw()
 end
 
 function GameMode:postDraw()
-    -- draw health and shit here
 end
 
 function GameMode:onKeyPressed(key)
@@ -80,6 +62,10 @@ end
 function GameMode:calcView()
     local players = world:getPlayers()
 
+    if #players == 0 then
+        return 0, 0, 1
+    end
+
     local xMax = nil
     local yMax = nil
 
@@ -88,6 +74,7 @@ function GameMode:calcView()
 
     local x = 0
     local y = 0
+
     for k, v in pairs(players) do
         local xPlayer, yPlayer = v:getPos()
         x = x + xPlayer
@@ -159,36 +146,5 @@ end
 console:addConCommand("shake", function(cmd, arg)
     gamemode:applyShake(tonumber(arg[1]) or 10)
 end)
-
--- this adds a bit of overhead
--- but checks for newly created instance variables
--- and deleted variables
--- if arguments["watch"] then
---     function GameMode:__index(index)
---         local class = getmetatable(self)
-
---         local obj = {}
---         local o = setmetatable(obj, class)
---         class.initialize(o)
-
---         for k, v in pairs(obj) do
---             if not rawget(self, k) then
---                 rawset(self, k, v)
---             end
---         end
-
---         for k, v in pairs(self) do
---             if not rawget(obj, k) then
---                 rawset(self, k, nil)
---             end
---         end
-
---         local ret = rawget(self, index) or class[index]
---         if not ret and class.super then
---             return class.super[index]
---         end
---         return ret
---     end
--- end
 
 return GameMode

@@ -71,4 +71,12 @@ function StateManager:keyreleased(key)
     self.states[#self.states]:keyreleased(key)
 end
 
+function StateManager:mousepressed(x, y, button)
+    self.states[#self.states]:mousepressed(x, y, button)
+end
+
+function StateManager:mousereleased(x, y, button)
+    self.states[#self.states]:mousereleased(x, y, button)
+end
+
 return StateManager:new()

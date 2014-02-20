@@ -37,6 +37,10 @@ function Entity:spawn(context)
     self.facing = 1
 end
 
+function Entity:isPlayer()
+    return true
+end
+
 function Entity:setNoClip(bool)
     self.noclip = bool
 

@@ -37,3 +37,13 @@ Only one world belonging to the cosmos. Handles the physics and refers to the ph
 -- Input
 -- Timer
 
+tilesets:
+=========
+
+
+Create a folder for each tileset group
+Name each file nameOfTileset-flags.png
+flags =
+a | 
+
+

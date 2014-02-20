@@ -149,10 +149,12 @@ end
 
 function love.mousepressed(x, y, button)
     input:mousepressed(x, y, button)
+    statemanager:mousepressed(x, y, button)
     loveframes.mousepressed(x, y, button)
 end
 
 function love.mousereleased(x, y, button)
     input:mousereleased(x, y, button)
+    statemanager:mousereleased(x, y, button)
     loveframes.mousereleased(x, y, button)
 end

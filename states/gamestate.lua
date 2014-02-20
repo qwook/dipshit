@@ -10,7 +10,7 @@ function GameState:initialize()
     -- global world
     world = World:new()
 
-    self:loadGamemode("basegm")
+    self:loadGamemode(arguments["gamemode"] or "basegm")
 end
 
 function GameState:exit()
@@ -34,6 +34,13 @@ function GameState:update(dt)
 end
 
 function GameState:loadGamemode(name)
+
+    local gm = reload("gamemodes." .. name)
+    if not gm then
+        print("Did not return a gamemode class!")
+        return
+    end
+
     if world then
         world:destroy()
     end
@@ -44,7 +51,6 @@ function GameState:loadGamemode(name)
         gamemode:exit()
     end
 
-    local gm = reload("gamemodes." .. name)
     gamemode = gm:new()
 
     self.gamemode = name
@@ -60,20 +66,24 @@ end
 
 function GameState:draw(dt)
     love.graphics.origin()
+    love.graphics.push()
 
     -- draw whatever the gamemode wants to draw
-    local success, err = pcall(gamemode.draw, gamemode)
+    local success, err = pcall(gamemode.preDraw, gamemode)
     if not success then
         print(err)
     end
-
-    love.graphics.push()
 
     -- camera calculation
     local success, x, y, scale = pcall(gamemode.calcView, gamemode)
     if not success then
         print(x)
     else
+        -- in case we don't get any returns
+        x = x or 0
+        y = y or 0
+        scale = scale or 1
+
         -- center the camera and scale the coordinates
         x = -x
         y = -y
@@ -89,10 +99,15 @@ function GameState:draw(dt)
         print(err)
     end
 
+    local success, err = pcall(gamemode.postDraw, gamemode)
+    if not success then
+        print(err)
+    end
+
     love.graphics.pop()
     
     -- draw gamemode hud or whatever
-    local success, err = pcall(gamemode.postDraw, gamemode)
+    local success, err = pcall(gamemode.drawHUD, gamemode)
     if not success then
         print(err)
     end
@@ -113,6 +128,20 @@ end
 
 function GameState:keyreleased(key)
     local success, err = pcall(gamemode.onKeyReleased, gamemode, key)
+    if not success then
+        print(err)
+    end
+end
+
+function GameState:mousepressed(x, y, button)
+    local success, err = pcall(gamemode.onMousePressed, gamemode, x, y, button)
+    if not success then
+        print(err)
+    end
+end
+
+function GameState:mousereleased(x, y, button)
+    local success, err = pcall(gamemode.onMouseReleased, gamemode, x, y, button)
     if not success then
         print(err)
     end
