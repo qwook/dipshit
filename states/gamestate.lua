@@ -4,6 +4,10 @@ local GameState = class("GameState", BaseState)
 
 local World = require("world")
 
+-- Everything here is protected in pcalls.
+-- Errors should not crash the game, but instead print out!
+-- If the game crashes, blame Henry!
+
 function GameState:initialize()
     self.gamemode = nil
 
@@ -22,11 +26,13 @@ function GameState:exit()
 end
 
 function GameState:update(dt)
+    -- try { world:update(dt) } catch { print(error) }
     local success, err = pcall(world.update, world, dt)
     if not success then
         print(err)
     end
 
+    -- try { gamemode:update(dt) } catch { print(error) }
     local success, err = pcall(gamemode.update, gamemode, dt)
     if not success then
         print(err)
@@ -34,6 +40,7 @@ function GameState:update(dt)
 end
 
 function GameState:loadGamemode(name)
+
 
     local gm = reload("gamemodes." .. name)
     if not gm then
@@ -54,6 +61,35 @@ function GameState:loadGamemode(name)
     gamemode = gm:new()
 
     self.gamemode = name
+
+
+    if true then return end
+
+    local gm = reload("gamemodes." .. name)
+    if not gm then
+        print("Did not return a gamemode class!")
+        return
+    end
+
+    if world then
+        world:destroy()
+    end
+
+    world = World:new()
+
+    if gamemode then
+        gamemode:exit()
+    end
+
+    -- try { gm:new() } catch { print(error) }
+    local success, newgamemode = pcall(gm.new, gm)
+    if success and newgamemode then
+        gamemode = newgamemode
+        self.gamemode = name
+    else
+        print(newgamemode)
+        self:loadGamemode("basegm")
+    end
 end
 
 function GameState:reloadGamemode()
@@ -69,12 +105,14 @@ function GameState:draw(dt)
     love.graphics.push()
 
     -- draw whatever the gamemode wants to draw
+    -- try { gamemode:preDraw() } catch { print(error) }
     local success, err = pcall(gamemode.preDraw, gamemode)
     if not success then
         print(err)
     end
 
     -- camera calculation
+    -- try { gamemode:calcView() } catch { print(error) }
     local success, x, y, scale = pcall(gamemode.calcView, gamemode)
     if not success then
         print(x)
@@ -94,11 +132,13 @@ function GameState:draw(dt)
     end
 
     -- draw the world and all the entities
+    -- try { world:draw() } catch { print(error) }
     local success, err = pcall(world.draw, world)
     if not success then
         print(err)
     end
 
+    -- try { gamemode:postDraw() } catch { print(error) }
     local success, err = pcall(gamemode.postDraw, gamemode)
     if not success then
         print(err)
@@ -107,10 +147,13 @@ function GameState:draw(dt)
     love.graphics.pop()
     
     -- draw gamemode hud or whatever
+    -- try { gamemode:drawHUD() } catch { print(error) }
     local success, err = pcall(gamemode.drawHUD, gamemode)
     if not success then
         print(err)
     end
+
+    love.graphics.origin()
 end
 
 function GameState:keypressed(key, isrepeat)
@@ -119,6 +162,7 @@ function GameState:keypressed(key, isrepeat)
     end
 
     if not isrepeat then
+        -- try { gamemode:onKeyPressed(key) } catch { print(error) }
         local success, err = pcall(gamemode.onKeyPressed, gamemode, key)
         if not success then
             print(err)
@@ -127,6 +171,7 @@ function GameState:keypressed(key, isrepeat)
 end
 
 function GameState:keyreleased(key)
+    -- try { gamemode:onKeyReleased(key) } catch { print(error) }
     local success, err = pcall(gamemode.onKeyReleased, gamemode, key)
     if not success then
         print(err)
@@ -134,6 +179,7 @@ function GameState:keyreleased(key)
 end
 
 function GameState:mousepressed(x, y, button)
+    -- try { gamemode:onMousePressed(x, y, button) } catch { print(error) }
     local success, err = pcall(gamemode.onMousePressed, gamemode, x, y, button)
     if not success then
         print(err)
@@ -141,6 +187,7 @@ function GameState:mousepressed(x, y, button)
 end
 
 function GameState:mousereleased(x, y, button)
+    -- try { gamemode:onMouseReleased(x, y, button) } catch { print(error) }
     local success, err = pcall(gamemode.onMouseReleased, gamemode, x, y, button)
     if not success then
         print(err)

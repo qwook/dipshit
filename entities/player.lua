@@ -103,6 +103,8 @@ function Entity:handleMovement(dt)
                 self:applyForce(-500, 0)
             end
             self.facing = -1
+        elseif self.noclip then
+            self:applyForce(-velx, -vely)
         end
 
         if self:isKeyDown("jump") and self.jumpTimer <= 0 then
@@ -150,6 +152,23 @@ function Entity:handleMovement(dt)
         end
     end
 
+end
+
+function Entity:beginContact(other, contact, isother)
+    self.super:beginContact(other, contact, isother)
+
+    -- detect if we hit the wall, if we did set the friction to 0
+    local nx, ny = contact:getNormal()
+    if not isother then
+        nx = -nx
+        ny = -ny
+    end
+
+    -- find the angle between the hit normal and the up vector
+    local ang = math.angle(0, -1, nx, ny)
+    if ang >= math.pi/2 then
+        contact:setFriction(0)
+    end
 end
 
 console:addConCommand("noclip", function()

@@ -20,7 +20,6 @@ function GameMode:exit()
 end
 
 function GameMode:update(dt)
-    world:updateEntities(dt)
 end
 
 function GameMode:drawHUD()

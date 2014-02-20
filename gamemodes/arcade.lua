@@ -27,6 +27,10 @@ function GameMode:initialize()
     tilemap:spawn()
 end
 
+function GameMode:update(dt)
+    world:updateEntities(dt)
+end
+
 function GameMode:postDraw()
 end
 

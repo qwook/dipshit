@@ -49,7 +49,7 @@ function StateManager:pop()
     self.states[#self.states]:exit()
     table.remove(self.states, #self.states)
 
-    loveframes.SetState(self.states[#self.states])
+    loveframes.SetState(self.states[#self.states]._name)
 end
 
 function StateManager:draw()

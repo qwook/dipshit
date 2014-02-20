@@ -101,7 +101,7 @@ function World:getPlayers()
 end
 
 function World:updateEntities(dt)
-    
+
     -- update global entities
     for k, ent in pairs(self.children) do
         ent:update(dt)
