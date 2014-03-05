@@ -1,0 +1,686 @@
+{
+[110] = {
+[105] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[99] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[114] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[106] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[98] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[115] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[107] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[101] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[108] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[100] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[109] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[103] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[110] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[102] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[111] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[97] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[112] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[104] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[113] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[96] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+}
+;
+[109] = {
+[105] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[99] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[114] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[106] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[98] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[115] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[107] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[101] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[108] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[100] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[109] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[103] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[110] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[102] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[111] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[97] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[112] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[104] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[113] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[96] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+}
+;
+[103] = {
+[109] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[103] = {
+[name] = 11;
+[tileset] = "street";
+}
+;
+[102] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[107] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[97] = {
+[name] = 8;
+[tileset] = "street";
+}
+;
+[101] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[98] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[108] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[100] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[99] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+}
+;
+[108] = {
+[105] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[99] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[114] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[106] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[98] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[115] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[107] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[101] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[108] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[100] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[109] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[103] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[110] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[102] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[111] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[97] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[112] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[104] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[113] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[96] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+}
+;
+[104] = {
+[103] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[114] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[98] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[115] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[101] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[99] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[97] = {
+[name] = 9;
+[tileset] = "street";
+}
+;
+[102] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[100] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[96] = {
+[name] = 8;
+[tileset] = "street";
+}
+;
+}
+;
+[106] = {
+[105] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[99] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[114] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[106] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[98] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[115] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[107] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[101] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[108] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[100] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[109] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[103] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[110] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[102] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[111] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[97] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[112] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[104] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[113] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[96] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+}
+;
+[105] = {
+[99] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[114] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[102] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[115] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[113] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[103] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[97] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[101] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[112] = {
+[name] = 2;
+[tileset] = "street";
+}
+;
+[98] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[100] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[96] = {
+[name] = 9;
+[tileset] = "street";
+}
+;
+}
+;
+[107] = {
+[105] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[99] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[114] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[106] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[98] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[115] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[107] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[101] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[108] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[100] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[109] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[103] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[110] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[102] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[111] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[97] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[112] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[104] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[113] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+[96] = {
+[name] = 5;
+[tileset] = "street";
+}
+;
+}
+;
+}

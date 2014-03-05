@@ -56,30 +56,30 @@ function Entity:traverseTile(x, y, offx, offy)
             self:traverseTile(x, y-1, 0, 1)
         -- bottom right triangle
         elseif self:getCollisionTileAt(x, y) == 2 then
-            if offx > 0 or offy > 0 then
+            if offx == nil or offx > 0 or offy > 0 then
                 self:markTile(x, y, self.currentChunkId)
-                self:traverseTile(x+1, y, 1, 0)
-                self:traverseTile(x, y+1, 0, 1)
+                self:traverseTile(x+1, y, -1, 0)
+                self:traverseTile(x, y+1, 0, -1)
             end
         -- bottom left triangle
         elseif self:getCollisionTileAt(x, y) == 3 then
-            if offx < 0 or offy > 0 then
+            if offx == nil or offx < 0 or offy > 0 then
                 self:markTile(x, y, self.currentChunkId)
                 self:traverseTile(x-1, y, 1, 0)
-                self:traverseTile(x, y+1, 0, 1)
+                self:traverseTile(x, y+1, 0, -1)
             end
         -- top left triangle
         elseif self:getCollisionTileAt(x, y) == 4 then
-            if offx < 0 or offy < 0 then
+            if offx == nil or offx < 0 or offy < 0 then
                 self:markTile(x, y, self.currentChunkId)
                 self:traverseTile(x-1, y, 1, 0)
                 self:traverseTile(x, y-1, 0, 1)
             end
-        -- bottom left triangle
+        -- top right triangle
         elseif self:getCollisionTileAt(x, y) == 5 then
-            if offx < 0 or offy < 0 then
+            if offx == nil or offx < 0 or offy < 0 then
                 self:markTile(x, y, self.currentChunkId)
-                self:traverseTile(x+1, y, 1, 0)
+                self:traverseTile(x+1, y, -1, 0)
                 self:traverseTile(x, y-1, 0, 1)
             end
         end

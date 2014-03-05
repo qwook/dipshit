@@ -2,9 +2,9 @@
 local BaseEntity = reload("entities.baseentity")
 local Entity = class("TileMap", BaseEntity)
 
-TILESIZE = 16
-
 reload("entities.tilemap.edgefinder")
+
+console:addConVar("showshapes", 0, "number")
 
 function Entity:initialize(...)
     self.super:initialize(...)
@@ -24,28 +24,31 @@ end
 -----------------------------------------
 
 function Entity:draw()
-    love.graphics.setColor(255, 255, 0)
+    love.graphics.setColor(255, 255, 255)
     for y, row in pairs(self.tiles) do
         for x, tile in pairs(row) do
-            love.graphics.rectangle("fill", x*TILESIZE, y*TILESIZE, TILESIZE, TILESIZE)
+            love.graphics.draw(tile.image, tile.quad, x*TILESIZE, y*TILESIZE, 0, 1, 1)
         end
     end
 
-    for k, loop in pairs(self.loops) do
-        if #loop > 1 then
-            love.graphics.setColor(255, 0, 0)
-            love.graphics.line(loop)
-            -- local x = nil
-            -- for k, v in pairs(loop) do
-            --     if x == nil then
-            --         x = v
-            --     else
-            --         local y = v
-            --         love.graphics.setColor(255, 0, 0, 50)
-            --         love.graphics.circle('fill', x, y, 10, 10)
-            --         x = nil
-            --     end
-            -- end
+    if console:getConVar("showshapes") == 1 then
+        for k, loop in pairs(self.loops) do
+            if #loop > 1 then
+                love.graphics.setColor(255, 0, 0)
+                love.graphics.line(loop)
+                love.graphics.line(loop[#loop-1], loop[#loop], loop[1], loop[2])
+                -- local x = nil
+                -- for k, v in pairs(loop) do
+                --     if x == nil then
+                --         x = v
+                --     else
+                --         local y = v
+                --         love.graphics.setColor(255, 0, 0, 50)
+                --         love.graphics.circle('fill', x, y, 10, 10)
+                --         x = nil
+                --     end
+                -- end
+            end
         end
     end
 end
@@ -67,10 +70,22 @@ function Entity:initPhysics()
 
 end
 
-function Entity:setTileAt(x, y, tile)
-    self.tiles[y] = self.tiles[y] or {}
-    self.tiles[y][x] = tile
+function Entity:setTileAt(x, y, tileset, tilename)
+    if tileset == nil then
+        if self.tiles[y] then
+            self.tiles[y][x] = nil
+            -- if #self.tiles[y] == 0 then
+            --     self.tiles[y] = nil
+            -- end
+        end
+    else
+        local tile = tilemanager:getTile(tileset, tilename)
+        self.tiles[y] = self.tiles[y] or {}
+        self.tiles[y][x] = tile
+    end
+end
 
+function Entity:reloadPhysics()
     self:generateLoops()
     self:initPhysics()
 end
@@ -101,9 +116,12 @@ end
 function Entity:getCollisionTileAt(x, y)
     -- if not tempMap[y] then return 0 end
     -- return tempMap[y][x] or 0
-
     if not self.tiles[y] then return 0 end
-    return self.tiles[y][x] or 0
+    if self.tiles[y][x] then
+        return self.tiles[y][x].colshape
+    else
+        return 0
+    end
 end
 
 -------------------------------------------------------

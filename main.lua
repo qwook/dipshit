@@ -31,6 +31,8 @@ for k, v in pairs(arg) do
     end
 end
 
+path = love.filesystem.getWorkingDirectory() .. "/" .. arg[1]
+
 -------------------------------------------
 -- Initiate global classes
 
@@ -38,6 +40,7 @@ console = require("console")
 statemanager = require("statemanager")
 input = require("input")
 entityfactory = require("entityfactory")
+tilemanager = require("tilemanager")
 
 -- todo: put these in JSON format
 
@@ -108,6 +111,11 @@ function love.load()
         statemanager:setState(arguments["state"])
     else
         statemanager:setState("menu")
+    end
+
+    if arguments["gamemode"] then
+        statemanager:setState("game")
+        statemanager:getState():loadGamemode(arguments["gamemode"])
     end
 end
 
