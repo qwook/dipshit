@@ -21,7 +21,11 @@ function EntityFactory:reloadEntity(entname)
 end
 
 function EntityFactory:create(entname)
-    return self.entityMap[entname:lower()]:new()
+    local newEnt = self.entityMap[entname:lower()]:new()
+    if (type(newEnt) == "boolean") then
+        error("Forgot to return entity in it's class definition!", -1);
+    end
+    return newEnt
 end
 
 local entityfactory = EntityFactory:new()

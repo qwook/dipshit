@@ -2,7 +2,7 @@
 local PhysEntity = reload("entities.physentity")
 local Controller = reload("controller")
 local Entity = class("Player", PhysEntity, Controller)
-Entity.spritesheet = SpriteSheet:new("sprites/dude.png", 32, 32)
+-- Entity.spritesheet = SpriteSheet:new("sprites/dude.png", 32, 32)
 
 Entity.phystype = "dynamic"
 Entity.density = 1
@@ -58,7 +58,7 @@ end
 function Entity:draw()
     love.graphics.scale(2)
     love.graphics.setColor(255, 255, 255)
-    self.spritesheet:draw(8, 0, -self.facing*12, -19, 0, self.facing, 1)
+    -- self.spritesheet:draw(8, 0, -self.facing*12, -19, 0, self.facing, 1)
 end
 
 function Entity:update(dt)

@@ -58,7 +58,13 @@ function GameState:loadGamemode(name)
         gamemode:exit()
     end
 
-    gamemode = gm:new()
+    local succ, ret = pcall(gm.new, gm)
+    if succ then
+        gamemode = ret
+    else
+        print(ret)
+        return
+    end
 
     self.gamemode = name
 
@@ -145,7 +151,7 @@ function GameState:draw(dt)
     end
 
     love.graphics.pop()
-    
+
     -- draw gamemode hud or whatever
     -- try { gamemode:drawHUD() } catch { print(error) }
     local success, err = pcall(gamemode.drawHUD, gamemode)
