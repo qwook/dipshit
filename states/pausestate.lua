@@ -15,13 +15,45 @@ textbox:SetSize(400-10, 400-24-5-5-5-26)
 textbox:SetEditable(false)
 textbox:SetMultiline(true)
 
+local inputQueue = {}
+local inputQueueCursor = -1
+
 local textinput = loveframes.Create("textinput", consoleframe)
 textinput:SetPos(5, 400-26-5)
 textinput:SetSize(400-10, 26)
 textinput.OnEnter = function(self, text)
+    inputQueueCursor = -1
     self:SetText("")
     textbox:SetText(textbox:GetText() .. "\n> " .. text)
     console:runString(text)
+    if (inputQueue[#inputQueue] ~= text) then
+        table.insert(inputQueue, text)
+    end
+    if (#inputQueue > 100) then
+        table.remove(inputQueue, 1)
+    end
+end
+local keypressed = textinput.keypressed
+textinput.keypressed = function(self, key, unicode)
+    if (#inputQueue > 0) then
+        if (key == "up") then
+            inputQueueCursor = inputQueueCursor + 1
+            if (inputQueueCursor >= #inputQueue-1) then
+                inputQueueCursor = #inputQueue-1
+            end
+            self:SetText(inputQueue[#inputQueue - inputQueueCursor])
+        elseif (key == "down") then
+            inputQueueCursor = inputQueueCursor - 1
+            if (inputQueueCursor <= 0) then
+                inputQueueCursor = 0
+            end
+            self:SetText(inputQueue[#inputQueue - inputQueueCursor])
+        elseif (self:GetText():len() ~= 0) then
+            inputQueueCursor = 0
+        end
+    end
+
+    return getmetatable(textinput).keypressed(self, key, unicode)
 end
 
 -- overwrite the print function
